@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer utilities {
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+}
+
+/* =====================================================
+   ESTILOS DE IMPRESSÃO
+   ===================================================== */
+@media print {
+  /* Esconder elementos que não devem ser impressos */
+  .no-print,
+  nav,
+  header,
+  .sidebar,
+  button:not(.print-button),
+  .tabs-navigation {
+    display: none !important;
+  }
+
+  /* Reset de cores para impressão */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Container do relatório */
+  .print-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  /* Cabeçalho do relatório */
+  .print-header {
+    text-align: center;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .print-header h1 {
+    font-size: 18pt !important;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .print-header p {
+    font-size: 10pt !important;
+    color: #666;
+    margin: 5px 0 0 0;
+  }
+
+  /* Tabelas para impressão */
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #333;
+    padding: 6px 8px;
+    text-align: left;
+  }
+
+  .print-table th {
+    background-color: #f0f0f0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-weight: bold;
+  }
+
+  .print-table tr:nth-child(even) {
+    background-color: #f9f9f9 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Seções do relatório */
+  .print-section {
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+  }
+
+  .print-section-title {
+    font-size: 14pt !important;
+    font-weight: bold;
+    border-bottom: 1px solid #666;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+
+  /* Cards de resumo */
+  .print-summary-card {
+    display: inline-block;
+    width: 30%;
+    border: 1px solid #333;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    vertical-align: top;
+  }
+
+  .print-summary-card .label {
+    font-size: 9pt;
+    color: #666;
+  }
+
+  .print-summary-card .value {
+    font-size: 14pt;
+    font-weight: bold;
+  }
+
+  /* Ficha de OP */
+  .print-op-ficha {
+    border: 2px solid #333;
+    padding: 15px;
+  }
+
+  .print-op-ficha .op-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  .print-op-ficha .op-codigo {
+    font-size: 20pt;
+    font-weight: bold;
+  }
+
+  .print-op-ficha .op-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .print-op-ficha .op-field {
+    margin-bottom: 8px;
+  }
+
+  .print-op-ficha .op-field-label {
+    font-size: 9pt;
+    color: #666;
+    text-transform: uppercase;
+  }
+
+  .print-op-ficha .op-field-value {
+    font-size: 11pt;
+    font-weight: 500;
+  }
+
+  /* Rodapé */
+  .print-footer {
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+  }
+
+  /* Forçar quebra de página */
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* Status badges para impressão */
+  .print-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+  }
+
+  .print-status-pago {
+    background-color: #d4edda !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-status-pendente {
+    background-color: #fff3cd !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-status-atrasado {
+    background-color: #f8d7da !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

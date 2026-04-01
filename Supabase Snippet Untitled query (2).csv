@@ -1,0 +1,335 @@
+tipo,nome,detalhes
+COLUNA,audit_log.acao,text
+COLUNA,audit_log.campos_alterados,ARRAY
+COLUNA,audit_log.created_at,timestamp with time zone
+COLUNA,audit_log.dados_anteriores,jsonb
+COLUNA,audit_log.dados_novos,jsonb
+COLUNA,audit_log.id,uuid
+COLUNA,audit_log.registro_id,uuid
+COLUNA,audit_log.tabela,text
+COLUNA,audit_log.usuario_email,text
+COLUNA,audit_log.usuario_id,uuid
+COLUNA,cliente_estatisticas.ativo,boolean
+COLUNA,cliente_estatisticas.documento,text
+COLUNA,cliente_estatisticas.email,text
+COLUNA,cliente_estatisticas.id,uuid
+COLUNA,cliente_estatisticas.nome,text
+COLUNA,cliente_estatisticas.ops_atrasadas,bigint
+COLUNA,cliente_estatisticas.telefone,text
+COLUNA,cliente_estatisticas.total_faturado,numeric
+COLUNA,cliente_estatisticas.total_ops,bigint
+COLUNA,cliente_estatisticas.total_pago,numeric
+COLUNA,cliente_estatisticas.total_pendente,numeric
+COLUNA,cliente_estatisticas.ultima_op_data,timestamp with time zone
+COLUNA,clientes.ativo,boolean
+COLUNA,clientes.bairro,text
+COLUNA,clientes.celular,text
+COLUNA,clientes.cep,text
+COLUNA,clientes.cidade,text
+COLUNA,clientes.complemento,text
+COLUNA,clientes.contato_nome,text
+COLUNA,clientes.created_at,timestamp with time zone
+COLUNA,clientes.created_by,uuid
+COLUNA,clientes.documento,text
+COLUNA,clientes.email,text
+COLUNA,clientes.endereco,text
+COLUNA,clientes.estado,text
+COLUNA,clientes.id,uuid
+COLUNA,clientes.nome,text
+COLUNA,clientes.nome_fantasia,text
+COLUNA,clientes.numero,text
+COLUNA,clientes.observacoes,text
+COLUNA,clientes.telefone,text
+COLUNA,clientes.tipo_documento,text
+COLUNA,clientes.updated_at,timestamp with time zone
+COLUNA,clientes.updated_by,uuid
+COLUNA,dashboard_stats.ops_em_producao,bigint
+COLUNA,dashboard_stats.ops_finalizadas_mes,bigint
+COLUNA,dashboard_stats.total_ops,bigint
+COLUNA,dashboard_stats.valor_a_receber,numeric
+COLUNA,financeiro.created_at,timestamp with time zone
+COLUNA,financeiro.custos_extras,numeric
+COLUNA,financeiro.data_pagamento,date
+COLUNA,financeiro.data_vencimento,date
+COLUNA,financeiro.deleted_at,timestamp with time zone
+COLUNA,financeiro.deleted_by,uuid
+COLUNA,financeiro.forma_pagamento,text
+COLUNA,financeiro.id,uuid
+COLUNA,financeiro.lucro_final,numeric
+COLUNA,financeiro.numero_parcelas,integer
+COLUNA,financeiro.observacoes,text
+COLUNA,financeiro.op_id,uuid
+COLUNA,financeiro.parcela_atual,integer
+COLUNA,financeiro.prejuizo_defeitos,numeric
+COLUNA,financeiro.status_pagamento,USER-DEFINED
+COLUNA,financeiro.updated_at,timestamp with time zone
+COLUNA,financeiro.updated_by,uuid
+COLUNA,financeiro.valor_pago,numeric
+COLUNA,financeiro.valor_total,numeric
+COLUNA,financeiro_movimentos.created_at,timestamp with time zone
+COLUNA,financeiro_movimentos.created_by,uuid
+COLUNA,financeiro_movimentos.data_competencia,date
+COLUNA,financeiro_movimentos.data_movimento,date
+COLUNA,financeiro_movimentos.financeiro_id,uuid
+COLUNA,financeiro_movimentos.forma_pagamento,text
+COLUNA,financeiro_movimentos.id,uuid
+COLUNA,financeiro_movimentos.observacao,text
+COLUNA,financeiro_movimentos.op_id,uuid
+COLUNA,financeiro_movimentos.saldo_anterior,numeric
+COLUNA,financeiro_movimentos.saldo_atual,numeric
+COLUNA,financeiro_movimentos.tipo,USER-DEFINED
+COLUNA,financeiro_movimentos.valor,numeric
+COLUNA,funcionarios_ponto.ativo,boolean
+COLUNA,funcionarios_ponto.cargo,text
+COLUNA,funcionarios_ponto.created_at,timestamp with time zone
+COLUNA,funcionarios_ponto.created_by,uuid
+COLUNA,funcionarios_ponto.id,uuid
+COLUNA,funcionarios_ponto.nome,text
+COLUNA,funcionarios_ponto.ponto_token,uuid
+COLUNA,funcionarios_ponto.updated_at,timestamp with time zone
+COLUNA,funcionarios_ponto.user_id,uuid
+COLUNA,historico_financeiro.acao,text
+COLUNA,historico_financeiro.created_at,timestamp with time zone
+COLUNA,historico_financeiro.id,uuid
+COLUNA,historico_financeiro.observacao,text
+COLUNA,historico_financeiro.op_id,uuid
+COLUNA,historico_financeiro.status_anterior,text
+COLUNA,historico_financeiro.status_novo,text
+COLUNA,historico_financeiro.usuario_id,uuid
+COLUNA,historico_financeiro.valor_anterior,numeric
+COLUNA,historico_financeiro.valor_novo,numeric
+COLUNA,orcamentos.cliente,text
+COLUNA,orcamentos.cliente_id,uuid
+COLUNA,orcamentos.convertido_op_id,uuid
+COLUNA,orcamentos.created_at,timestamp with time zone
+COLUNA,orcamentos.created_by,uuid
+COLUNA,orcamentos.data_envio,timestamp with time zone
+COLUNA,orcamentos.data_resposta,timestamp with time zone
+COLUNA,orcamentos.deleted_at,timestamp with time zone
+COLUNA,orcamentos.deleted_by,uuid
+COLUNA,orcamentos.id,uuid
+COLUNA,orcamentos.nome_peca,text
+COLUNA,orcamentos.observacoes,text
+COLUNA,orcamentos.quantidade,integer
+COLUNA,orcamentos.status,USER-DEFINED
+COLUNA,orcamentos.updated_at,timestamp with time zone
+COLUNA,orcamentos.updated_by,uuid
+COLUNA,orcamentos.valor_estimado,numeric
+COLUNA,orcamentos.versao,integer
+COLUNA,ordens_producao.aprovada,boolean
+COLUNA,ordens_producao.cliente,text
+COLUNA,ordens_producao.cliente_id,uuid
+COLUNA,ordens_producao.codigo,text
+COLUNA,ordens_producao.codigo_descricao_material,text
+COLUNA,ordens_producao.created_at,timestamp with time zone
+COLUNA,ordens_producao.created_by,uuid
+COLUNA,ordens_producao.data_inicio,date
+COLUNA,ordens_producao.data_termino,date
+COLUNA,ordens_producao.deleted_at,timestamp with time zone
+COLUNA,ordens_producao.deleted_by,uuid
+COLUNA,ordens_producao.fornecedor,text
+COLUNA,ordens_producao.id,uuid
+COLUNA,ordens_producao.lote,text
+COLUNA,ordens_producao.maquina_utilizada,text
+COLUNA,ordens_producao.material,text
+COLUNA,ordens_producao.nome_peca,text
+COLUNA,ordens_producao.nota_fiscal_data,date
+COLUNA,ordens_producao.nota_fiscal_emitida,boolean
+COLUNA,ordens_producao.nota_fiscal_numero,text
+COLUNA,ordens_producao.observacoes_material,text
+COLUNA,ordens_producao.operador_responsavel,text
+COLUNA,ordens_producao.preco_servico,numeric
+COLUNA,ordens_producao.preparacao_maquina,text
+COLUNA,ordens_producao.quantidade_material,numeric
+COLUNA,ordens_producao.quantidade_total,integer
+COLUNA,ordens_producao.status,USER-DEFINED
+COLUNA,ordens_producao.status_financeiro,USER-DEFINED
+COLUNA,ordens_producao.status_producao,USER-DEFINED
+COLUNA,ordens_producao.supervisor_data_aprovacao,timestamp with time zone
+COLUNA,ordens_producao.supervisor_nome,text
+COLUNA,ordens_producao.tipo,USER-DEFINED
+COLUNA,ordens_producao.updated_at,timestamp with time zone
+COLUNA,ordens_producao.updated_by,uuid
+COLUNA,ordens_producao_ativas.aprovada,boolean
+COLUNA,ordens_producao_ativas.cliente,text
+COLUNA,ordens_producao_ativas.cliente_id,uuid
+COLUNA,ordens_producao_ativas.codigo,text
+COLUNA,ordens_producao_ativas.codigo_descricao_material,text
+COLUNA,ordens_producao_ativas.created_at,timestamp with time zone
+COLUNA,ordens_producao_ativas.created_by,uuid
+COLUNA,ordens_producao_ativas.data_inicio,date
+COLUNA,ordens_producao_ativas.data_termino,date
+COLUNA,ordens_producao_ativas.deleted_at,timestamp with time zone
+COLUNA,ordens_producao_ativas.deleted_by,uuid
+COLUNA,ordens_producao_ativas.fornecedor,text
+COLUNA,ordens_producao_ativas.id,uuid
+COLUNA,ordens_producao_ativas.lote,text
+COLUNA,ordens_producao_ativas.maquina_utilizada,text
+COLUNA,ordens_producao_ativas.material,text
+COLUNA,ordens_producao_ativas.nome_peca,text
+COLUNA,ordens_producao_ativas.nota_fiscal_data,date
+COLUNA,ordens_producao_ativas.nota_fiscal_emitida,boolean
+COLUNA,ordens_producao_ativas.nota_fiscal_numero,text
+COLUNA,ordens_producao_ativas.observacoes_material,text
+COLUNA,ordens_producao_ativas.operador_responsavel,text
+COLUNA,ordens_producao_ativas.preco_servico,numeric
+COLUNA,ordens_producao_ativas.preparacao_maquina,text
+COLUNA,ordens_producao_ativas.quantidade_material,numeric
+COLUNA,ordens_producao_ativas.quantidade_total,integer
+COLUNA,ordens_producao_ativas.status,USER-DEFINED
+COLUNA,ordens_producao_ativas.status_financeiro,USER-DEFINED
+COLUNA,ordens_producao_ativas.status_producao,USER-DEFINED
+COLUNA,ordens_producao_ativas.supervisor_data_aprovacao,timestamp with time zone
+COLUNA,ordens_producao_ativas.supervisor_nome,text
+COLUNA,ordens_producao_ativas.tipo,USER-DEFINED
+COLUNA,ordens_producao_ativas.updated_at,timestamp with time zone
+COLUNA,ordens_producao_ativas.updated_by,uuid
+COLUNA,pecas_defeituosas.acao_corretiva,text
+COLUNA,pecas_defeituosas.causa_provavel,text
+COLUNA,pecas_defeituosas.created_at,timestamp with time zone
+COLUNA,pecas_defeituosas.data,date
+COLUNA,pecas_defeituosas.id,uuid
+COLUNA,pecas_defeituosas.op_id,uuid
+COLUNA,pecas_defeituosas.quantidade,integer
+COLUNA,pecas_defeituosas.tipo_defeito,text
+COLUNA,producao_diaria.created_at,timestamp with time zone
+COLUNA,producao_diaria.data,date
+COLUNA,producao_diaria.id,uuid
+COLUNA,producao_diaria.observacoes,text
+COLUNA,producao_diaria.op_id,uuid
+COLUNA,producao_diaria.operador_id,uuid
+COLUNA,producao_diaria.pecas_defeituosas,integer
+COLUNA,producao_diaria.quantidade_produzida,integer
+COLUNA,producao_diaria.turno,text
+COLUNA,registro_ponto.created_at,timestamp with time zone
+COLUNA,registro_ponto.data,date
+COLUNA,registro_ponto.funcionario_id,uuid
+COLUNA,registro_ponto.hora_entrada,timestamp with time zone
+COLUNA,registro_ponto.hora_saida,timestamp with time zone
+COLUNA,registro_ponto.id,uuid
+COLUNA,registro_ponto.observacao,text
+COLUNA,registro_ponto.origem,text
+COLUNA,registro_ponto.status,text
+COLUNA,registro_ponto.total_minutos,integer
+COLUNA,registro_ponto.updated_at,timestamp with time zone
+COLUNA,registro_ponto.updated_by,uuid
+COLUNA,users.active,boolean
+COLUNA,users.created_at,timestamp with time zone
+COLUNA,users.email,text
+COLUNA,users.id,uuid
+COLUNA,users.last_login,timestamp with time zone
+COLUNA,users.nome,text
+COLUNA,users.role,USER-DEFINED
+COLUNA,users.updated_at,timestamp with time zone
+COLUNA,users.updated_by,uuid
+ENUM,movimento_tipo,"pagamento, pagamento_parcial, estorno, ajuste, desconto, juros, multa, custo_extra, prejuizo, cancelamento"
+ENUM,op_status,"criada, em_producao, finalizada, faturada, nota_emitida, paga"
+ENUM,op_type,"encomenda, estoque"
+ENUM,orcamento_status,"aberto, convertido, cancelado, rascunho, enviado, aprovado, reprovado"
+ENUM,payment_status,"nao_pago, pago, pendente"
+ENUM,status_financeiro_enum,"pendente, parcial, pago, atrasado, cancelado"
+ENUM,status_producao_enum,"criada, em_producao, pausada, finalizada, cancelada"
+ENUM,user_role,"financeiro, chefe, operador"
+INDICE,audit_log_pkey,audit_log
+INDICE,clientes_pkey,clientes
+INDICE,financeiro_movimentos_pkey,financeiro_movimentos
+INDICE,financeiro_op_id_key,financeiro
+INDICE,financeiro_pkey,financeiro
+INDICE,funcionarios_ponto_pkey,funcionarios_ponto
+INDICE,funcionarios_ponto_ponto_token_key,funcionarios_ponto
+INDICE,historico_financeiro_pkey,historico_financeiro
+INDICE,idx_audit_created,audit_log
+INDICE,idx_audit_registro,audit_log
+INDICE,idx_audit_tabela,audit_log
+INDICE,idx_audit_usuario,audit_log
+INDICE,idx_clientes_ativo,clientes
+INDICE,idx_clientes_documento,clientes
+INDICE,idx_clientes_nome,clientes
+INDICE,idx_fin_mov_data,financeiro_movimentos
+INDICE,idx_fin_mov_financeiro_id,financeiro_movimentos
+INDICE,idx_fin_mov_op_id,financeiro_movimentos
+INDICE,idx_fin_mov_tipo,financeiro_movimentos
+INDICE,idx_financeiro_status,financeiro
+INDICE,idx_funcionarios_ponto_ativo,funcionarios_ponto
+INDICE,idx_funcionarios_ponto_token,funcionarios_ponto
+INDICE,idx_funcionarios_ponto_user_id,funcionarios_ponto
+INDICE,idx_historico_data,historico_financeiro
+INDICE,idx_historico_op,historico_financeiro
+INDICE,idx_op_cliente_id,ordens_producao
+INDICE,idx_op_codigo,ordens_producao
+INDICE,idx_op_data_inicio,ordens_producao
+INDICE,idx_op_status,ordens_producao
+INDICE,idx_op_status_financeiro,ordens_producao
+INDICE,idx_op_status_producao,ordens_producao
+INDICE,idx_orc_cliente_id,orcamentos
+INDICE,idx_orcamento_status,orcamentos
+INDICE,idx_producao_op_id,producao_diaria
+INDICE,idx_registro_ponto_data,registro_ponto
+INDICE,idx_registro_ponto_funcionario,registro_ponto
+INDICE,idx_registro_ponto_funcionario_data,registro_ponto
+INDICE,idx_registro_ponto_status,registro_ponto
+INDICE,idx_unique_ponto_aberto,registro_ponto
+INDICE,orcamentos_pkey,orcamentos
+INDICE,ordens_producao_codigo_key,ordens_producao
+INDICE,ordens_producao_pkey,ordens_producao
+INDICE,pecas_defeituosas_pkey,pecas_defeituosas
+INDICE,producao_diaria_pkey,producao_diaria
+INDICE,registro_ponto_pkey,registro_ponto
+INDICE,users_email_key,users
+INDICE,users_pkey,users
+POLICY,Apenas financeiro pode criar histórico,historico_financeiro
+POLICY,Apenas financeiro pode criar orçamentos,orcamentos
+POLICY,Apenas financeiro pode ver audit_log,audit_log
+POLICY,Apenas financeiro pode ver histórico,historico_financeiro
+POLICY,Apenas financeiro pode ver orçamentos,orcamentos
+POLICY,Authenticated users can delete OPs,ordens_producao
+POLICY,Authenticated users can delete financeiro,financeiro
+POLICY,Authenticated users can delete pecas,pecas_defeituosas
+POLICY,Authenticated users can delete pecas_defeituosas,pecas_defeituosas
+POLICY,Authenticated users can delete producao,producao_diaria
+POLICY,Authenticated users can insert OPs,ordens_producao
+POLICY,Authenticated users can insert financeiro,financeiro
+POLICY,Authenticated users can insert pecas,pecas_defeituosas
+POLICY,Authenticated users can insert pecas_defeituosas,pecas_defeituosas
+POLICY,Authenticated users can insert producao,producao_diaria
+POLICY,Authenticated users can update OPs,ordens_producao
+POLICY,Authenticated users can update financeiro,financeiro
+POLICY,Authenticated users can update pecas,pecas_defeituosas
+POLICY,Authenticated users can update pecas_defeituosas,pecas_defeituosas
+POLICY,Authenticated users can update producao,producao_diaria
+POLICY,Authenticated users can view OPs,ordens_producao
+POLICY,Authenticated users can view financeiro,financeiro
+POLICY,Authenticated users can view pecas,pecas_defeituosas
+POLICY,Authenticated users can view pecas_defeituosas,pecas_defeituosas
+POLICY,Authenticated users can view producao,producao_diaria
+POLICY,Financeiro e Chefe podem criar clientes,clientes
+POLICY,Financeiro e Chefe podem editar OPs não aprovadas,ordens_producao
+POLICY,Financeiro e Chefe podem editar clientes,clientes
+POLICY,Financeiro e Chefe podem ver funcionarios_ponto,funcionarios_ponto
+POLICY,Financeiro e Chefe podem ver registro_ponto,registro_ponto
+POLICY,Financeiro pode criar funcionarios_ponto,funcionarios_ponto
+POLICY,Financeiro pode criar movimentos,financeiro_movimentos
+POLICY,Financeiro pode criar registro_ponto,registro_ponto
+POLICY,Financeiro pode editar funcionarios_ponto,funcionarios_ponto
+POLICY,Financeiro pode editar registro_ponto,registro_ponto
+POLICY,Financeiro pode ver movimentos,financeiro_movimentos
+POLICY,Sistema pode inserir audit_log,audit_log
+POLICY,Todos podem ver clientes,clientes
+POLICY,Users can update own profile,users
+POLICY,Users can view all users,users
+POLICY,prevent_direct_insert_audit_log,audit_log
+TABELA,audit_log,
+TABELA,clientes,
+TABELA,financeiro,
+TABELA,financeiro_movimentos,
+TABELA,funcionarios_ponto,
+TABELA,historico_financeiro,
+TABELA,orcamentos,
+TABELA,ordens_producao,
+TABELA,pecas_defeituosas,
+TABELA,producao_diaria,
+TABELA,registro_ponto,
+TABELA,users,
+VIEW,cliente_estatisticas,
+VIEW,dashboard_stats,
+VIEW,ordens_producao_ativas,
