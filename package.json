@@ -1,6 +1,6 @@
 {
   "name": "rj-usinagem",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Sistema de Gestão de Ordens de Produção - RJ Usinagem",
   "main": "electron/main.js",
   "author": "RJ Usinagem",

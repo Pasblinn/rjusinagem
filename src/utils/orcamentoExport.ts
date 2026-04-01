@@ -4,6 +4,13 @@ import { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, Width
 import { saveAs } from 'file-saver'
 import { Orcamento, OrcamentoItem } from '@/types'
 
+// ═══ Dados da empresa - altere aqui ═══
+const EMPRESA = {
+  nome: 'RJ USINAGEM',
+  subtitulo: 'Usinagem de Precisão',
+  cnpj: '00.000.000/0000-00', // TODO: Substituir pelo CNPJ real
+}
+
 function formatCurrency(value: number): string {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
@@ -38,12 +45,12 @@ export function exportOrcamentoPDF(orcamento: Orcamento, itens: OrcamentoItem[])
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(22)
   doc.setFont('helvetica', 'bold')
-  doc.text('RJ USINAGEM', 14, 18)
+  doc.text(EMPRESA.nome, 14, 18)
 
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
-  doc.text('Usinagem de Precisão', 14, 26)
-  doc.text('CNPJ: 00.000.000/0000-00', 14, 32)
+  doc.text(EMPRESA.subtitulo, 14, 26)
+  doc.text(`CNPJ: ${EMPRESA.cnpj}`, 14, 32)
 
   // Título do documento
   doc.setFontSize(14)
@@ -278,15 +285,15 @@ export async function exportOrcamentoDOCX(orcamento: Orcamento, itens: Orcamento
     new Paragraph({
       alignment: AlignmentType.LEFT,
       spacing: { after: 40 },
-      children: [new TextRun({ text: 'RJ USINAGEM', bold: true, size: 36, color: '1E40AF', font: 'Calibri' })],
+      children: [new TextRun({ text: EMPRESA.nome, bold: true, size: 36, color: '1E40AF', font: 'Calibri' })],
     }),
     new Paragraph({
       spacing: { after: 40 },
-      children: [new TextRun({ text: 'Usinagem de Precisão', size: 20, color: '666666', font: 'Calibri' })],
+      children: [new TextRun({ text: EMPRESA.subtitulo, size: 20, color: '666666', font: 'Calibri' })],
     }),
     new Paragraph({
       spacing: { after: 200 },
-      children: [new TextRun({ text: `CNPJ: 00.000.000/0000-00`, size: 18, color: '999999', font: 'Calibri' })],
+      children: [new TextRun({ text: `CNPJ: ${EMPRESA.cnpj}`, size: 18, color: '999999', font: 'Calibri' })],
     }),
 
     // Título orçamento
