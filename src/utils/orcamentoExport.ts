@@ -8,7 +8,7 @@ import { Orcamento, OrcamentoItem } from '@/types'
 const EMPRESA = {
   nome: 'RJ USINAGEM',
   subtitulo: 'Usinagem de Precisão',
-  cnpj: '00.000.000/0000-00', // TODO: Substituir pelo CNPJ real
+  cnpj: '56.913.744/0001-51',
 }
 
 function formatCurrency(value: number): string {

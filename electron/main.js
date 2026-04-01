@@ -1,8 +1,14 @@
 const { app, BrowserWindow, dialog } = require('electron')
 const path = require('path')
+const log = require('electron-log')
 const { autoUpdater } = require('electron-updater')
 
 const isDev = process.env.NODE_ENV === 'development'
+
+// Configurar logs do auto-updater
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
+log.info('App iniciando...')
 
 let mainWindow = null
 
@@ -26,8 +32,6 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:5173')
     mainWindow.webContents.openDevTools()
   } else {
-    // __dirname em produção: resources/app.asar/electron
-    // Precisa subir um nível para chegar em dist
     mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
   }
 }
@@ -41,7 +45,12 @@ function setupAutoUpdater() {
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
 
+  autoUpdater.on('checking-for-update', () => {
+    log.info('Verificando atualizações...')
+  })
+
   autoUpdater.on('update-available', (info) => {
+    log.info('Atualização disponível:', info.version)
     dialog.showMessageBox(mainWindow, {
       type: 'info',
       title: 'Atualização disponível',
@@ -50,7 +59,16 @@ function setupAutoUpdater() {
     })
   })
 
+  autoUpdater.on('update-not-available', (info) => {
+    log.info('Nenhuma atualização disponível. Versão atual:', app.getVersion())
+  })
+
+  autoUpdater.on('download-progress', (progress) => {
+    log.info(`Download: ${Math.round(progress.percent)}%`)
+  })
+
   autoUpdater.on('update-downloaded', (info) => {
+    log.info('Atualização baixada:', info.version)
     dialog.showMessageBox(mainWindow, {
       type: 'info',
       title: 'Atualização pronta',
@@ -64,12 +82,12 @@ function setupAutoUpdater() {
   })
 
   autoUpdater.on('error', (err) => {
-    console.error('Erro no auto-updater:', err)
+    log.error('Erro no auto-updater:', err)
   })
 
   // Verificar atualizações ao abrir
   autoUpdater.checkForUpdates().catch((err) => {
-    console.error('Falha ao verificar atualizações:', err)
+    log.error('Falha ao verificar atualizações:', err)
   })
 }
 
