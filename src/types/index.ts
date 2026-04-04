@@ -87,11 +87,13 @@ export interface OrdemProducao {
   // @deprecated - Mantido para compatibilidade, usar status_producao e status_financeiro
   status: OPStatus
 
-  preparacao_maquina: string
+  preparacao_maquina: string | null
+  preparacao_maquina_segundos: number
+  preparacao_maquina_inicio: string | null
 
   material: string | null
   codigo_descricao_material: string | null
-  quantidade_material: number | null
+  quantidade_material: string | null
   lote: string | null
   fornecedor: string | null
   observacoes_material: string | null
@@ -137,6 +139,7 @@ export interface ProducaoDiaria {
   descricao_operacao: string | null
   quantidade_produzida: number // legado - não usar mais
   pecas_defeituosas: number
+  maquina_utilizada: string | null
   observacoes: string | null
   operador_id: string
   created_at: string
@@ -360,7 +363,23 @@ export interface FuncionarioPonto {
   cargo: string | null
   ponto_token: string
   ativo: boolean
+  valor_hora: number
+  data_ultimo_pagamento: string | null
   created_by: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface Parcela {
+  id: string
+  financeiro_id: string
+  op_id: string
+  numero_parcela: number
+  valor: number
+  data_vencimento: string
+  data_pagamento: string | null
+  status: 'pendente' | 'pago' | 'atrasado'
+  observacoes: string | null
   created_at: string
   updated_at: string
 }

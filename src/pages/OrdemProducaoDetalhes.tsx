@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Edit, CheckCircle, Plus, AlertTriangle, Play, Pause, Square, XCircle, Trash2, Image as ImageIcon } from 'lucide-react'
+import { ArrowLeft, Edit, CheckCircle, Plus, AlertTriangle, Play, Pause, Square, XCircle, Trash2, Image as ImageIcon, Timer } from 'lucide-react'
 import { Layout } from '@/components/Layout'
 import { Card } from '@/components/Card'
 import { Button } from '@/components/Button'
@@ -35,9 +35,11 @@ export function OrdemProducaoDetalhes() {
     hora_inicio: '',
     hora_fim: '',
     descricao_operacao: '',
+    maquina_utilizada: '',
     pecas_defeituosas: '',
     observacoes: '',
   })
+  const [editingProducaoId, setEditingProducaoId] = useState<string | null>(null)
 
   const [defeitoForm, setDefeitoForm] = useState({
     data: new Date().toISOString().split('T')[0],
@@ -48,6 +50,75 @@ export function OrdemProducaoDetalhes() {
   })
 
   const [supervisorNome, setSupervisorNome] = useState('')
+
+  // Timer - Preparação de Máquina
+  const [timerRunning, setTimerRunning] = useState(false)
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  function formatTimer(totalSeconds: number): string {
+    const h = Math.floor(totalSeconds / 3600)
+    const m = Math.floor((totalSeconds % 3600) / 60)
+    const s = totalSeconds % 60
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+  }
+
+  // Sync timer state when OP loads
+  useEffect(() => {
+    if (!op) return
+    const saved = op.preparacao_maquina_segundos || 0
+    if (op.preparacao_maquina_inicio) {
+      // Timer was running - calculate elapsed since last start
+      const startTime = new Date(op.preparacao_maquina_inicio).getTime()
+      const diff = Math.floor((Date.now() - startTime) / 1000)
+      setElapsedSeconds(saved + diff)
+      setTimerRunning(true)
+    } else {
+      setElapsedSeconds(saved)
+      setTimerRunning(false)
+    }
+  }, [op?.id])
+
+  // Tick every second while running
+  useEffect(() => {
+    if (timerRunning) {
+      timerRef.current = setInterval(() => {
+        setElapsedSeconds((prev) => prev + 1)
+      }, 1000)
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [timerRunning])
+
+  async function handleStartTimer() {
+    if (!op) return
+    const now = new Date().toISOString()
+    await api.updateOrdemProducao(op.id, {
+      preparacao_maquina_inicio: now,
+    } as any)
+    setTimerRunning(true)
+    setToast({ message: 'Preparação iniciada', type: 'success' })
+  }
+
+  async function handlePauseTimer() {
+    if (!op) return
+    // Save accumulated seconds
+    const saved = op.preparacao_maquina_segundos || 0
+    const startTime = op.preparacao_maquina_inicio ? new Date(op.preparacao_maquina_inicio).getTime() : Date.now()
+    const diff = Math.floor((Date.now() - startTime) / 1000)
+    const total = saved + diff
+
+    await api.updateOrdemProducao(op.id, {
+      preparacao_maquina_segundos: total,
+      preparacao_maquina_inicio: null,
+    } as any)
+    setElapsedSeconds(total)
+    setTimerRunning(false)
+    // Update local OP state
+    setOp({ ...op, preparacao_maquina_segundos: total, preparacao_maquina_inicio: null })
+    setToast({ message: 'Preparação pausada', type: 'success' })
+  }
 
   useEffect(() => {
     if (id) {
@@ -73,29 +144,70 @@ export function OrdemProducaoDetalhes() {
     }
   }
 
+  function resetProducaoForm() {
+    setProducaoForm({
+      data: new Date().toISOString().split('T')[0],
+      turno: '',
+      hora_inicio: '',
+      hora_fim: '',
+      descricao_operacao: '',
+      maquina_utilizada: '',
+      pecas_defeituosas: '',
+      observacoes: '',
+    })
+    setEditingProducaoId(null)
+  }
+
+  function handleEditarProducao(p: ProducaoDiaria) {
+    setProducaoForm({
+      data: p.data,
+      turno: p.turno,
+      hora_inicio: p.hora_inicio || '',
+      hora_fim: p.hora_fim || '',
+      descricao_operacao: p.descricao_operacao || '',
+      maquina_utilizada: p.maquina_utilizada || '',
+      pecas_defeituosas: p.pecas_defeituosas?.toString() || '',
+      observacoes: p.observacoes || '',
+    })
+    setEditingProducaoId(p.id)
+    setShowProducaoModal(true)
+  }
+
   async function handleRegistrarProducao(e: React.FormEvent) {
     e.preventDefault()
     try {
-      await api.createProducaoDiaria({
-        op_id: id!,
+      const payload = {
         data: producaoForm.data,
         turno: producaoForm.turno,
         hora_inicio: producaoForm.hora_inicio || null,
         hora_fim: producaoForm.hora_fim || null,
         descricao_operacao: producaoForm.descricao_operacao || null,
-        quantidade_produzida: 0, // campo legado, não usado mais
+        maquina_utilizada: producaoForm.maquina_utilizada || null,
+        quantidade_produzida: 0,
         pecas_defeituosas: parseInt(producaoForm.pecas_defeituosas || '0'),
         observacoes: producaoForm.observacoes || null,
-        operador_id: user!.id,
-      })
-      setToast({ message: 'Produção registrada com sucesso!', type: 'success' })
+      }
+
+      if (editingProducaoId) {
+        await api.updateProducaoDiaria(editingProducaoId, payload)
+        setToast({ message: 'Produção atualizada!', type: 'success' })
+      } else {
+        await api.createProducaoDiaria({
+          ...payload,
+          op_id: id!,
+          operador_id: user!.id,
+        })
+        setToast({ message: 'Produção registrada com sucesso!', type: 'success' })
+      }
       setShowProducaoModal(false)
+      resetProducaoForm()
       setProducaoForm({
         data: new Date().toISOString().split('T')[0],
         turno: '',
         hora_inicio: '',
         hora_fim: '',
         descricao_operacao: '',
+        maquina_utilizada: '',
         pecas_defeituosas: '',
         observacoes: '',
       })
@@ -453,10 +565,41 @@ export function OrdemProducaoDetalhes() {
         )}
 
         <Card>
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Preparação da Máquina</h3>
-          <p className="text-gray-700 whitespace-pre-wrap bg-yellow-50 p-4 rounded-lg border-2 border-yellow-300">
-            {op.preparacao_maquina}
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <Timer size={24} />
+              Preparação da Máquina
+            </h3>
+          </div>
+          <div className="flex items-center gap-6 bg-gray-50 p-6 rounded-lg border-2 border-gray-200">
+            <div className={`text-5xl font-mono font-bold tabular-nums ${timerRunning ? 'text-green-600' : 'text-gray-800'}`}>
+              {formatTimer(elapsedSeconds)}
+            </div>
+            <div className="flex gap-3">
+              {!timerRunning ? (
+                <Button variant="success" onClick={handleStartTimer}>
+                  <Play size={20} className="mr-2" />
+                  Iniciar
+                </Button>
+              ) : (
+                <Button variant="danger" onClick={handlePauseTimer}>
+                  <Pause size={20} className="mr-2" />
+                  Pausar
+                </Button>
+              )}
+            </div>
+            {elapsedSeconds > 0 && !timerRunning && (
+              <span className="text-sm text-gray-500">
+                Tempo acumulado
+              </span>
+            )}
+            {timerRunning && (
+              <span className="flex items-center gap-2 text-sm text-green-600 font-semibold">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                Em andamento
+              </span>
+            )}
+          </div>
         </Card>
 
         <Card>
@@ -478,8 +621,10 @@ export function OrdemProducaoDetalhes() {
                     <th className="px-4 py-3 text-left font-semibold">Data</th>
                     <th className="px-4 py-3 text-left font-semibold">Turno</th>
                     <th className="px-4 py-3 text-left font-semibold">Horário</th>
+                    <th className="px-4 py-3 text-left font-semibold">Máquina</th>
                     <th className="px-4 py-3 text-left font-semibold">Operação Realizada</th>
                     <th className="px-4 py-3 text-right font-semibold">Defeitos</th>
+                    <th className="px-4 py-3 text-center font-semibold">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -492,6 +637,7 @@ export function OrdemProducaoDetalhes() {
                           ? `${p.hora_inicio} - ${p.hora_fim}`
                           : p.hora_inicio || p.hora_fim || '-'}
                       </td>
+                      <td className="px-4 py-3 text-gray-700">{p.maquina_utilizada || '-'}</td>
                       <td className="px-4 py-3">
                         <p className="font-medium">{p.descricao_operacao || '-'}</p>
                         {p.observacoes && (
@@ -499,6 +645,12 @@ export function OrdemProducaoDetalhes() {
                         )}
                       </td>
                       <td className="px-4 py-3 text-right font-bold text-red-600">{p.pecas_defeituosas || 0}</td>
+                      <td className="px-4 py-3 text-center">
+                        <Button size="sm" variant="secondary" onClick={() => handleEditarProducao(p)}>
+                          <Edit size={14} className="mr-1" />
+                          Editar
+                        </Button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -550,8 +702,8 @@ export function OrdemProducaoDetalhes() {
 
       <Modal
         isOpen={showProducaoModal}
-        onClose={() => setShowProducaoModal(false)}
-        title="Registrar Produção"
+        onClose={() => { setShowProducaoModal(false); resetProducaoForm() }}
+        title={editingProducaoId ? 'Editar Produção' : 'Registrar Produção'}
       >
         <form onSubmit={handleRegistrarProducao} className="space-y-4">
           <Input
@@ -590,6 +742,12 @@ export function OrdemProducaoDetalhes() {
             required
           />
           <Input
+            label="Máquina Utilizada"
+            value={producaoForm.maquina_utilizada}
+            onChange={(e) => setProducaoForm({ ...producaoForm, maquina_utilizada: e.target.value })}
+            placeholder="Ex: Torno CNC, Fresa, Centro de Usinagem"
+          />
+          <Input
             label="Peças Defeituosas"
             type="number"
             value={producaoForm.pecas_defeituosas}
@@ -600,7 +758,7 @@ export function OrdemProducaoDetalhes() {
             value={producaoForm.observacoes}
             onChange={(e) => setProducaoForm({ ...producaoForm, observacoes: e.target.value })}
           />
-          <Button type="submit" fullWidth>Registrar</Button>
+          <Button type="submit" fullWidth>{editingProducaoId ? 'Salvar Alterações' : 'Registrar'}</Button>
         </form>
       </Modal>
 

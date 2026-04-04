@@ -15,6 +15,8 @@ import {
   HistoricoCliente,
   Cliente,
   ClienteEstatisticas,
+  Parcela,
+  FuncionarioPonto,
 } from '@/types'
 
 export const api = {
@@ -343,6 +345,18 @@ export const api = {
     const { data, error } = await supabase
       .from('producao_diaria')
       .insert([producao])
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
+  async updateProducaoDiaria(id: string, updates: Partial<ProducaoDiaria>): Promise<ProducaoDiaria> {
+    const { data, error } = await supabase
+      .from('producao_diaria')
+      .update(updates)
+      .eq('id', id)
       .select()
       .single()
 
@@ -1457,6 +1471,7 @@ export const api = {
     nome?: string
     cargo?: string
     ativo?: boolean
+    valor_hora?: number
   }): Promise<any> {
     const { data, error } = await supabase
       .from('funcionarios_ponto')
@@ -2051,5 +2066,118 @@ export const api = {
     }
 
     return data
+  },
+
+  // =====================================================
+  // PARCELAS
+  // =====================================================
+
+  async createParcelas(financeiro_id: string, op_id: string, valor_total: number, num_parcelas: number, primeira_data: string): Promise<Parcela[]> {
+    const parcelas: Partial<Parcela>[] = []
+    const valorParcela = Math.round((valor_total / num_parcelas) * 100) / 100
+
+    for (let i = 0; i < num_parcelas; i++) {
+      const data = new Date(primeira_data)
+      data.setMonth(data.getMonth() + i)
+      parcelas.push({
+        financeiro_id,
+        op_id,
+        numero_parcela: i + 1,
+        valor: i === num_parcelas - 1 ? Math.round((valor_total - valorParcela * (num_parcelas - 1)) * 100) / 100 : valorParcela,
+        data_vencimento: data.toISOString().split('T')[0],
+        status: 'pendente',
+      })
+    }
+
+    const { data, error } = await supabase
+      .from('parcelas')
+      .insert(parcelas)
+      .select()
+
+    if (error) throw error
+    return data || []
+  },
+
+  async getParcelasByFinanceiro(financeiro_id: string): Promise<Parcela[]> {
+    const { data, error } = await supabase
+      .from('parcelas')
+      .select('*')
+      .eq('financeiro_id', financeiro_id)
+      .order('numero_parcela')
+
+    if (error) throw error
+    return data || []
+  },
+
+  async getParcelasByOp(op_id: string): Promise<Parcela[]> {
+    const { data, error } = await supabase
+      .from('parcelas')
+      .select('*')
+      .eq('op_id', op_id)
+      .order('numero_parcela')
+
+    if (error) throw error
+    return data || []
+  },
+
+  async updateParcela(id: string, updates: Partial<Parcela>): Promise<Parcela> {
+    const { data, error } = await supabase
+      .from('parcelas')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
+  async deleteParcelasByFinanceiro(financeiro_id: string): Promise<void> {
+    const { error } = await supabase
+      .from('parcelas')
+      .delete()
+      .eq('financeiro_id', financeiro_id)
+
+    if (error) throw error
+  },
+
+  // =====================================================
+  // FUNCIONÁRIOS - VALOR HORA
+  // =====================================================
+
+  async updateFuncionarioValorHora(id: string, valor_hora: number): Promise<FuncionarioPonto> {
+    const { data, error } = await supabase
+      .from('funcionarios_ponto')
+      .update({ valor_hora })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
+  async marcarPagamentoFuncionario(id: string, data_pagamento: string): Promise<FuncionarioPonto> {
+    const { data, error } = await supabase
+      .from('funcionarios_ponto')
+      .update({ data_ultimo_pagamento: data_pagamento })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
+  async getHorasTrabalhadasDesde(funcionario_id: string, desde: string): Promise<number> {
+    const { data, error } = await supabase
+      .from('registros_ponto')
+      .select('total_minutos')
+      .eq('funcionario_id', funcionario_id)
+      .eq('status', 'fechado')
+      .gte('data', desde)
+
+    if (error) throw error
+    return (data || []).reduce((acc, r) => acc + (r.total_minutos || 0), 0)
   },
 }

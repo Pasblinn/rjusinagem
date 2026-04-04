@@ -33,7 +33,7 @@ export function OrdemProducaoForm() {
     tipo: 'encomenda',
     data_inicio: new Date().toISOString().split('T')[0],
     data_termino: '',
-    preparacao_maquina: '',
+    preparacao_maquina: '', // kept for editing legacy OPs
     material: '',
     codigo_descricao_material: '',
     quantidade_material: '',
@@ -80,10 +80,10 @@ export function OrdemProducaoForm() {
         tipo: op.tipo,
         data_inicio: op.data_inicio,
         data_termino: op.data_termino || '',
-        preparacao_maquina: op.preparacao_maquina,
+        preparacao_maquina: op.preparacao_maquina || '',
         material: op.material || '',
         codigo_descricao_material: op.codigo_descricao_material || '',
-        quantidade_material: op.quantidade_material?.toString() || '',
+        quantidade_material: op.quantidade_material || '',
         lote: op.lote || '',
         fornecedor: op.fornecedor || '',
         observacoes_material: op.observacoes_material || '',
@@ -131,11 +131,6 @@ export function OrdemProducaoForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.preparacao_maquina.trim()) {
-      setToast({ message: 'Preparação da Máquina é obrigatória', type: 'error' })
-      return
-    }
-
     try {
       setLoading(true)
 
@@ -151,10 +146,10 @@ export function OrdemProducaoForm() {
           // V3: Status separados - API define defaults automaticamente
           status_producao: 'criada',
           status_financeiro: 'pendente',
-          preparacao_maquina: formData.preparacao_maquina,
+          preparacao_maquina: formData.preparacao_maquina || null,
           material: formData.material || null,
           codigo_descricao_material: formData.codigo_descricao_material || null,
-          quantidade_material: formData.quantidade_material ? parseFloat(formData.quantidade_material) : null,
+          quantidade_material: formData.quantidade_material || null,
           lote: formData.lote || null,
           fornecedor: formData.fornecedor || null,
           observacoes_material: formData.observacoes_material || null,
@@ -177,10 +172,10 @@ export function OrdemProducaoForm() {
           tipo: formData.tipo as 'encomenda' | 'estoque',
           data_inicio: formData.data_inicio,
           data_termino: formData.data_termino || null,
-          preparacao_maquina: formData.preparacao_maquina,
+          preparacao_maquina: formData.preparacao_maquina || null,
           material: formData.material || null,
           codigo_descricao_material: formData.codigo_descricao_material || null,
-          quantidade_material: formData.quantidade_material ? parseFloat(formData.quantidade_material) : null,
+          quantidade_material: formData.quantidade_material || null,
           lote: formData.lote || null,
           fornecedor: formData.fornecedor || null,
           observacoes_material: formData.observacoes_material || null,
@@ -284,17 +279,6 @@ export function OrdemProducaoForm() {
           </Card>
 
           <Card>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Preparação da Máquina</h3>
-            <p className="text-sm text-gray-600 mb-4">Campo obrigatório antes de qualquer operação</p>
-            <Textarea
-              placeholder="Descreva a preparação necessária da máquina..."
-              value={formData.preparacao_maquina}
-              onChange={(e) => handleChange('preparacao_maquina', e.target.value)}
-              required
-            />
-          </Card>
-
-          <Card>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Informações de Material</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
@@ -309,10 +293,9 @@ export function OrdemProducaoForm() {
               />
               <Input
                 label="Quantidade"
-                type="number"
-                step="0.01"
                 value={formData.quantidade_material}
                 onChange={(e) => handleChange('quantidade_material', e.target.value)}
+                placeholder="Ex: 5 barras, 10kg, 3 chapas"
               />
               <Input
                 label="Lote"

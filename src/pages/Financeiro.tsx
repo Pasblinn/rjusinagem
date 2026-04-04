@@ -157,7 +157,11 @@ export function Financeiro() {
     custos_extras: '',
     prejuizo_defeitos: '',
     observacoes: '',
+    parcelado: false,
+    num_parcelas: '1',
+    primeira_data_parcela: '',
   })
+  const [parcelas, setParcelas] = useState<any[]>([])
 
   const [pagamentoForm, setPagamentoForm] = useState({
     valor_pago: '',
@@ -673,6 +677,8 @@ export function Financeiro() {
     try {
       const financeiro = financeiros.get(selectedOP.id)
 
+      const numParcelas = financeiroForm.parcelado ? parseInt(financeiroForm.num_parcelas) || 1 : 1
+
       const finData = {
         valor_total: parseFloat(financeiroForm.valor_total),
         forma_pagamento: financeiroForm.forma_pagamento,
@@ -681,18 +687,34 @@ export function Financeiro() {
         custos_extras: parseFloat(financeiroForm.custos_extras) || 0,
         prejuizo_defeitos: parseFloat(financeiroForm.prejuizo_defeitos) || 0,
         observacoes: financeiroForm.observacoes || null,
+        numero_parcelas: numParcelas,
       }
+
+      let financeiroId: string
 
       if (financeiro) {
         await api.updateFinanceiro(financeiro.id, finData)
+        financeiroId = financeiro.id
       } else {
-        await api.createFinanceiro({
+        const created = await api.createFinanceiro({
           op_id: selectedOP.id,
           ...finData,
           valor_pago: 0,
-          numero_parcelas: 1,
           parcela_atual: 1,
         })
+        financeiroId = created.id
+      }
+
+      // Create/recreate parcelas if parcelado
+      if (financeiroForm.parcelado && numParcelas > 1 && financeiroForm.primeira_data_parcela) {
+        await api.deleteParcelasByFinanceiro(financeiroId)
+        await api.createParcelas(
+          financeiroId,
+          selectedOP.id,
+          parseFloat(financeiroForm.valor_total),
+          numParcelas,
+          financeiroForm.primeira_data_parcela,
+        )
       }
 
       setToast({ message: 'Dados financeiros salvos!', type: 'success' })
@@ -802,7 +824,12 @@ export function Financeiro() {
         custos_extras: financeiro.custos_extras?.toString() || '0',
         prejuizo_defeitos: financeiro.prejuizo_defeitos?.toString() || '0',
         observacoes: financeiro.observacoes || '',
+        parcelado: financeiro.numero_parcelas > 1,
+        num_parcelas: financeiro.numero_parcelas?.toString() || '1',
+        primeira_data_parcela: financeiro.data_vencimento || '',
       })
+      // Load existing parcelas
+      api.getParcelasByFinanceiro(financeiro.id).then(setParcelas).catch(() => setParcelas([]))
     } else {
       setFinanceiroForm({
         valor_total: op.preco_servico.toString(),
@@ -812,7 +839,11 @@ export function Financeiro() {
         custos_extras: '0',
         prejuizo_defeitos: '0',
         observacoes: '',
+        parcelado: false,
+        num_parcelas: '1',
+        primeira_data_parcela: '',
       })
+      setParcelas([])
     }
 
     setShowFinanceiroModal(true)
@@ -1396,6 +1427,78 @@ export function Financeiro() {
               setFinanceiroForm({ ...financeiroForm, prejuizo_defeitos: e.target.value })
             }
           />
+          {/* Parcelamento */}
+          <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-lg space-y-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={financeiroForm.parcelado}
+                onChange={(e) => setFinanceiroForm({ ...financeiroForm, parcelado: e.target.checked })}
+                className="w-5 h-5 rounded"
+              />
+              <span className="font-semibold text-blue-800">Parcelado (Boleto)</span>
+            </label>
+
+            {financeiroForm.parcelado && (
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="Número de Parcelas"
+                  type="number"
+                  min="2"
+                  value={financeiroForm.num_parcelas}
+                  onChange={(e) => setFinanceiroForm({ ...financeiroForm, num_parcelas: e.target.value })}
+                  required
+                />
+                <Input
+                  label="1ª Parcela - Vencimento"
+                  type="date"
+                  value={financeiroForm.primeira_data_parcela}
+                  onChange={(e) => setFinanceiroForm({ ...financeiroForm, primeira_data_parcela: e.target.value })}
+                  required
+                />
+                {financeiroForm.valor_total && parseInt(financeiroForm.num_parcelas) > 1 && (
+                  <div className="col-span-2 text-sm text-blue-700">
+                    {parseInt(financeiroForm.num_parcelas)}x de{' '}
+                    <strong>{formatCurrency(parseFloat(financeiroForm.valor_total) / parseInt(financeiroForm.num_parcelas))}</strong>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Parcelas existentes */}
+            {parcelas.length > 0 && (
+              <div className="mt-3 space-y-2">
+                <p className="font-semibold text-blue-800 text-sm">Parcelas:</p>
+                {parcelas.map((p) => (
+                  <div key={p.id} className={`flex items-center justify-between p-2 rounded text-sm ${
+                    p.status === 'pago' ? 'bg-green-100' : p.status === 'atrasado' ? 'bg-red-100' : 'bg-white'
+                  }`}>
+                    <span>Parcela {p.numero_parcela}/{parcelas.length}</span>
+                    <span className="font-semibold">{formatCurrency(p.valor)}</span>
+                    <span>{formatDate(p.data_vencimento)}</span>
+                    <select
+                      value={p.status}
+                      onChange={async (e) => {
+                        const newStatus = e.target.value
+                        await api.updateParcela(p.id, {
+                          status: newStatus as any,
+                          data_pagamento: newStatus === 'pago' ? new Date().toISOString().split('T')[0] : null,
+                        })
+                        const updated = await api.getParcelasByFinanceiro(p.financeiro_id)
+                        setParcelas(updated)
+                      }}
+                      className="px-2 py-1 border rounded text-sm"
+                    >
+                      <option value="pendente">Pendente</option>
+                      <option value="pago">Pago</option>
+                      <option value="atrasado">Atrasado</option>
+                    </select>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <Textarea
             label="Observações"
             value={financeiroForm.observacoes}
@@ -2237,15 +2340,104 @@ interface OPsFinanceiroTabProps {
 }
 
 function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFinanceiroTabProps) {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFinanceiroFilter, setStatusFinanceiroFilter] = useState<string>('todos')
+  const [statusProducaoFilter, setStatusProducaoFilter] = useState<string>('todos')
+
+  const filteredOps = ops.filter((op) => {
+    const financeiro = financeiros.get(op.id)
+    const statusPag = financeiro?.status_pagamento || 'pendente'
+    const statusProd = op.status_producao || op.status
+
+    if (statusFinanceiroFilter !== 'todos' && statusPag !== statusFinanceiroFilter) return false
+    if (statusProducaoFilter !== 'todos' && statusProd !== statusProducaoFilter) return false
+
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase()
+      return (
+        op.codigo.toLowerCase().includes(term) ||
+        op.cliente.toLowerCase().includes(term) ||
+        op.nome_peca.toLowerCase().includes(term)
+      )
+    }
+    return true
+  })
+
   return (
     <div className="space-y-4">
-      {ops.length === 0 ? (
+      {/* Barra de pesquisa */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Buscar por código, cliente ou peça..."
+          className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
+      {/* Filtros financeiro */}
+      <div>
+        <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Financeiro</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          {[
+            { key: 'todos', label: 'Todos', color: '' },
+            { key: 'pendente', label: 'Pendente', color: 'border-yellow-400 text-yellow-700' },
+            { key: 'pago', label: 'Pago', color: 'border-green-400 text-green-700' },
+            { key: 'atrasado', label: 'Atrasado', color: 'border-red-400 text-red-700' },
+            { key: 'parcial', label: 'Parcial', color: 'border-blue-400 text-blue-700' },
+          ].map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setStatusFinanceiroFilter(f.key)}
+              className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${
+                statusFinanceiroFilter === f.key
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : `bg-white ${f.color || 'text-gray-700 border-gray-300'} hover:border-blue-400`
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Filtros produção */}
+      <div>
+        <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Produção</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          {[
+            { key: 'todos', label: 'Todos' },
+            { key: 'criada', label: 'Criada' },
+            { key: 'em_producao', label: 'Em Produção' },
+            { key: 'finalizada', label: 'Finalizada' },
+            { key: 'cancelada', label: 'Cancelada' },
+          ].map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setStatusProducaoFilter(f.key)}
+              className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${
+                statusProducaoFilter === f.key
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <p className="text-sm text-gray-500">{filteredOps.length} resultado(s)</p>
+
+      {filteredOps.length === 0 ? (
         <Card>
-          <p className="text-gray-600 text-center py-8 text-lg">Nenhuma ordem de produção</p>
+          <p className="text-gray-600 text-center py-8 text-lg">Nenhuma ordem de produção encontrada</p>
         </Card>
       ) : (
         <div className="space-y-3">
-          {ops.map((op) => {
+          {filteredOps.map((op) => {
             const financeiro = financeiros.get(op.id)
             const statusPagamento = financeiro?.status_pagamento || 'pendente'
 
@@ -2264,35 +2456,46 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
                 onClick={() => onEditar(op)}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex-1 grid grid-cols-6 gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">OP</p>
-                      <p className="text-gray-900 font-bold">{op.codigo}</p>
+                  <div className="flex-1">
+                    {/* Linha principal - Cliente + Peça em destaque */}
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-xs font-mono bg-gray-200 px-2 py-0.5 rounded">{op.codigo}</span>
+                      <h4 className="text-lg font-bold text-gray-900">{op.cliente}</h4>
+                      <span className="text-gray-500">-</span>
+                      <span className="text-gray-700 font-medium">{op.nome_peca}</span>
+                      {op.quantidade_total && (
+                        <span className="text-sm text-gray-500">({op.quantidade_total} {op.unidade || 'unid.'})</span>
+                      )}
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Cliente</p>
-                      <p className="text-gray-900">{op.cliente}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Produção</p>
-                      <StatusBadge status={op.status_producao || op.status} type="producao" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Valor</p>
-                      <p className="text-gray-900 font-bold text-lg">
-                        {formatCurrency(financeiro?.valor_total || op.preco_servico)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Vencimento</p>
-                      <p className="text-gray-900">{formatDate(financeiro?.data_vencimento || null)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Pagamento</p>
-                      <StatusBadge status={statusPagamento} type="payment" />
+                    {/* Linha de status e valores */}
+                    <div className="flex items-center gap-6 flex-wrap">
+                      <div>
+                        <span className="text-xs text-gray-500">Produção: </span>
+                        <StatusBadge status={op.status_producao || op.status} type="producao" />
+                      </div>
+                      <div>
+                        <span className="text-xs text-gray-500">Pagamento: </span>
+                        <StatusBadge status={statusPagamento} type="payment" />
+                      </div>
+                      <div>
+                        <span className="text-xs text-gray-500">Valor: </span>
+                        <span className="font-bold text-lg">{formatCurrency(financeiro?.valor_total || op.preco_servico)}</span>
+                      </div>
+                      {financeiro?.data_vencimento && (
+                        <div>
+                          <span className="text-xs text-gray-500">Vencimento: </span>
+                          <span className="text-gray-900">{formatDate(financeiro.data_vencimento)}</span>
+                        </div>
+                      )}
+                      {financeiro && financeiro.valor_pago > 0 && financeiro.valor_pago < financeiro.valor_total && (
+                        <div>
+                          <span className="text-xs text-gray-500">Pago: </span>
+                          <span className="font-semibold text-green-600">{formatCurrency(financeiro.valor_pago)}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="flex gap-2 ml-4">
+                  <div className="flex gap-2 ml-4 flex-shrink-0">
                     <Button
                       size="sm"
                       variant="secondary"
@@ -2316,15 +2519,6 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
                     </Button>
                   </div>
                 </div>
-                {financeiro && (financeiro.custos_extras > 0 || financeiro.prejuizo_defeitos > 0) && (
-                  <div className="mt-3 pt-3 border-t text-sm text-gray-600">
-                    Custos extras: {formatCurrency(financeiro.custos_extras)} | Prejuízo defeitos:{' '}
-                    {formatCurrency(financeiro.prejuizo_defeitos)} |
-                    <span className="font-bold text-purple-600 ml-2">
-                      Lucro final: {formatCurrency(financeiro.lucro_final)}
-                    </span>
-                  </div>
-                )}
               </Card>
             )
           })}

@@ -13,6 +13,7 @@ import {
   Trash2,
   PlusCircle,
   MinusCircle,
+  DollarSign,
 } from 'lucide-react'
 import { Card } from '@/components/Card'
 import { Button } from '@/components/Button'
@@ -90,6 +91,7 @@ export function PontoTab({ userId }: PontoTabProps) {
   const [formFuncionario, setFormFuncionario] = useState({
     nome: '',
     cargo: '',
+    valor_hora: '',
   })
 
   // Sub-aba
@@ -196,21 +198,21 @@ export function PontoTab({ userId }: PontoTabProps) {
     e.preventDefault()
     try {
       if (selectedFuncionario) {
-        // Editar
         await api.updateFuncionarioPonto(selectedFuncionario.id, {
           nome: formFuncionario.nome,
           cargo: formFuncionario.cargo || undefined,
+          valor_hora: formFuncionario.valor_hora ? parseFloat(formFuncionario.valor_hora) : 0,
         })
       } else {
-        // Novo
         await api.createFuncionarioPonto({
           nome: formFuncionario.nome,
           cargo: formFuncionario.cargo || undefined,
-        }, userId)
+          valor_hora: formFuncionario.valor_hora ? parseFloat(formFuncionario.valor_hora) : 0,
+        } as any, userId)
       }
       setShowNovoFuncionarioModal(false)
       setShowEditarFuncionarioModal(false)
-      setFormFuncionario({ nome: '', cargo: '' })
+      setFormFuncionario({ nome: '', cargo: '', valor_hora: '' })
       setSelectedFuncionario(null)
       loadData()
     } catch (error) {
@@ -234,8 +236,53 @@ export function PontoTab({ userId }: PontoTabProps) {
     setFormFuncionario({
       nome: funcionario.nome,
       cargo: funcionario.cargo || '',
+      valor_hora: funcionario.valor_hora?.toString() || '',
     })
     setShowEditarFuncionarioModal(true)
+  }
+
+  async function handleCalcularPagamento(funcionario: FuncionarioPonto) {
+    try {
+      const desde = funcionario.data_ultimo_pagamento || funcionario.created_at.split('T')[0]
+      const totalMinutos = await api.getHorasTrabalhadasDesde(funcionario.id, desde)
+      const totalHoras = totalMinutos / 60
+      const valorTotal = Math.round(totalHoras * funcionario.valor_hora * 100) / 100
+
+      if (totalMinutos === 0) {
+        setToast({ message: `${funcionario.nome} não tem horas registradas desde o último pagamento`, type: 'error' })
+        return
+      }
+
+      const confirma = window.confirm(
+        `${funcionario.nome}\n\n` +
+        `Período: ${desde} até hoje\n` +
+        `Horas trabalhadas: ${totalHoras.toFixed(1)}h\n` +
+        `Valor/hora: R$ ${funcionario.valor_hora.toFixed(2)}\n` +
+        `Total a pagar: R$ ${valorTotal.toFixed(2)}\n\n` +
+        `Deseja criar conta a pagar e marcar como pago até hoje?`
+      )
+
+      if (!confirma) return
+
+      // Create conta a pagar
+      await api.createContaPagar({
+        descricao: `Pagamento ${funcionario.nome} - ${totalHoras.toFixed(1)}h trabalhadas`,
+        tipo: 'variavel',
+        categoria: 'salarios',
+        valor: valorTotal,
+        data_vencimento: new Date().toISOString().split('T')[0],
+        observacoes: `${totalHoras.toFixed(1)}h x R$${funcionario.valor_hora.toFixed(2)} | Desde: ${desde}`,
+      }, userId || undefined)
+
+      // Mark payment date
+      await api.marcarPagamentoFuncionario(funcionario.id, new Date().toISOString().split('T')[0])
+
+      setToast({ message: `Conta a pagar de R$ ${valorTotal.toFixed(2)} criada para ${funcionario.nome}`, type: 'success' })
+      loadData()
+    } catch (error) {
+      console.error('Erro ao calcular pagamento:', error)
+      setToast({ message: 'Erro ao calcular pagamento', type: 'error' })
+    }
   }
 
   function abrirLinkModal(funcionario: FuncionarioPonto) {
@@ -398,7 +445,7 @@ export function PontoTab({ userId }: PontoTabProps) {
             </div>
             <Button onClick={() => {
               setSelectedFuncionario(null)
-              setFormFuncionario({ nome: '', cargo: '' })
+              setFormFuncionario({ nome: '', cargo: '', valor_hora: '' })
               setShowNovoFuncionarioModal(true)
             }}>
               <Plus size={20} className="mr-2" />
@@ -415,6 +462,9 @@ export function PontoTab({ userId }: PontoTabProps) {
                     <h3 className="text-lg font-bold text-gray-900">{funcionario.nome}</h3>
                     {funcionario.cargo && (
                       <p className="text-gray-500">{funcionario.cargo}</p>
+                    )}
+                    {funcionario.valor_hora > 0 && (
+                      <p className="text-blue-600 font-semibold mt-1">R$ {funcionario.valor_hora.toFixed(2)}/hora</p>
                     )}
                     <span className={`inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full ${
                       funcionario.ativo
@@ -449,6 +499,17 @@ export function PontoTab({ userId }: PontoTabProps) {
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t space-y-2">
+                  {funcionario.valor_hora > 0 && (
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      onClick={() => handleCalcularPagamento(funcionario)}
+                      fullWidth
+                    >
+                      <DollarSign size={16} className="mr-2" />
+                      Calcular Pagamento
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="outline"
@@ -816,6 +877,14 @@ export function PontoTab({ userId }: PontoTabProps) {
             value={formFuncionario.cargo}
             onChange={(e) => setFormFuncionario({ ...formFuncionario, cargo: e.target.value })}
             placeholder="Ex: Operador, Torneiro, etc."
+          />
+          <Input
+            label="Valor da Hora (R$)"
+            type="number"
+            step="0.01"
+            value={formFuncionario.valor_hora}
+            onChange={(e) => setFormFuncionario({ ...formFuncionario, valor_hora: e.target.value })}
+            placeholder="Ex: 25.00"
           />
           <Button type="submit" fullWidth>
             {selectedFuncionario ? 'Salvar Alterações' : 'Cadastrar Funcionário'}
