@@ -220,7 +220,7 @@ export function OrdemProducaoForm() {
     return (
       <Layout>
         <div className="text-center py-12">
-          <p className="text-gray-600 text-lg">Carregando...</p>
+          <p className="text-gray-600 dark:text-neutral-400 text-lg">Carregando...</p>
         </div>
       </Layout>
     )
@@ -241,7 +241,7 @@ export function OrdemProducaoForm() {
               Voltar
             </Button>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">
                 {isNew ? 'Nova Ordem de Produção' : 'Editar Ordem de Produção'}
               </h2>
             </div>
@@ -250,7 +250,7 @@ export function OrdemProducaoForm() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card>
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Informações Básicas</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 mb-4">Informações Básicas</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Select
                 label="Tipo de OP"
@@ -279,7 +279,7 @@ export function OrdemProducaoForm() {
           </Card>
 
           <Card>
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Informações de Material</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 mb-4">Informações de Material</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
                 label="Material"
@@ -318,10 +318,10 @@ export function OrdemProducaoForm() {
           </Card>
 
           <Card>
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Cliente e Peça</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 mb-4">Cliente e Peça</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-base font-semibold text-gray-700 mb-2">
+                <label className="block text-base font-semibold text-gray-700 dark:text-neutral-300 mb-2">
                   Nome do Cliente <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -394,7 +394,7 @@ export function OrdemProducaoForm() {
           </Card>
 
           <Card>
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Produção</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 mb-4">Produção</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
                 label="Máquina Utilizada"
@@ -410,8 +410,8 @@ export function OrdemProducaoForm() {
           </Card>
 
           <Card>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Planta / Desenho da Peça</h3>
-            <p className="text-sm text-gray-600 mb-4">Imagem do desenho técnico ou planta da peça (opcional)</p>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 mb-2">Planta / Desenho da Peça</h3>
+            <p className="text-sm text-gray-600 dark:text-neutral-400 mb-4">Imagem do desenho técnico ou planta da peça (opcional)</p>
 
             {imagemPreview ? (
               <div className="relative inline-block">
@@ -430,9 +430,9 @@ export function OrdemProducaoForm() {
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-neutral-700 rounded-lg cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-neutral-800 transition-colors">
                 <ImageIcon size={32} className="text-gray-400 mb-2" />
-                <p className="text-gray-600 font-medium">Clique para adicionar a planta/desenho</p>
+                <p className="text-gray-600 dark:text-neutral-400 font-medium">Clique para adicionar a planta/desenho</p>
                 <p className="text-sm text-gray-400 mt-1">PNG, JPG até 10MB</p>
                 <input
                   ref={fileInputRef}

@@ -7,8 +7,32 @@
     @apply antialiased;
   }
 
+  html {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-neutral-50 text-neutral-900 tracking-tight;
+  }
+
+  html.dark body {
+    @apply bg-neutral-950 text-neutral-100;
+  }
+
+  html.dark input[type="date"]::-webkit-calendar-picker-indicator,
+  html.dark input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) opacity(0.7);
+  }
+
+  html.dark select {
+    color-scheme: dark;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
   }
 }
 

@@ -1,20 +1,22 @@
 import React from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 import { Login } from './pages/Login'
 import { Dashboard } from './pages/Dashboard'
 import { OrdemProducaoForm } from './pages/OrdemProducaoForm'
 import { OrdemProducaoDetalhes } from './pages/OrdemProducaoDetalhes'
 import { Financeiro } from './pages/Financeiro'
 import { PontoMobile } from './pages/PontoMobile'
+import { UpdateProgress } from './components/UpdateProgress'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600 text-lg">Carregando...</p>
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
+        <p className="text-gray-600 dark:text-neutral-400 text-lg">Carregando...</p>
       </div>
     )
   }
@@ -77,11 +79,14 @@ function AppRoutes() {
 
 function App() {
   return (
-    <HashRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </HashRouter>
+    <ThemeProvider>
+      <HashRouter>
+        <AuthProvider>
+          <AppRoutes />
+          <UpdateProgress />
+        </AuthProvider>
+      </HashRouter>
+    </ThemeProvider>
   )
 }
 

@@ -2072,13 +2072,13 @@ export const api = {
   // PARCELAS
   // =====================================================
 
-  async createParcelas(financeiro_id: string, op_id: string, valor_total: number, num_parcelas: number, primeira_data: string): Promise<Parcela[]> {
+  async createParcelas(financeiro_id: string, op_id: string, valor_total: number, num_parcelas: number, primeira_data: string, intervalo_dias: number = 30): Promise<Parcela[]> {
     const parcelas: Partial<Parcela>[] = []
     const valorParcela = Math.round((valor_total / num_parcelas) * 100) / 100
 
     for (let i = 0; i < num_parcelas; i++) {
-      const data = new Date(primeira_data)
-      data.setMonth(data.getMonth() + i)
+      const data = new Date(primeira_data + 'T00:00:00')
+      data.setDate(data.getDate() + intervalo_dias * i)
       parcelas.push({
         financeiro_id,
         op_id,
@@ -2106,6 +2106,21 @@ export const api = {
       .order('numero_parcela')
 
     if (error) throw error
+    return data || []
+  },
+
+  async listParcelasPeriodo(data_inicio: string, data_fim: string): Promise<Parcela[]> {
+    const { data, error } = await supabase
+      .from('parcelas')
+      .select('*')
+      .gte('data_vencimento', data_inicio)
+      .lte('data_vencimento', data_fim)
+      .order('data_vencimento')
+
+    if (error) {
+      console.warn('Erro ao listar parcelas:', error)
+      return []
+    }
     return data || []
   },
 
@@ -2171,7 +2186,7 @@ export const api = {
 
   async getHorasTrabalhadasDesde(funcionario_id: string, desde: string): Promise<number> {
     const { data, error } = await supabase
-      .from('registros_ponto')
+      .from('registro_ponto')
       .select('total_minutos')
       .eq('funcionario_id', funcionario_id)
       .eq('status', 'fechado')

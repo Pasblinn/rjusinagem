@@ -119,16 +119,16 @@ export function Dashboard() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Ordens de Produção</h2>
-            <p className="text-gray-600 mt-1">Gerencie todas as ordens de produção</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">Ordens de Produção</h2>
+            <p className="text-gray-600 dark:text-neutral-400 mt-1">Gerencie todas as ordens de produção</p>
           </div>
           <div className="flex items-center gap-4">
             {/* Indicador de última atualização */}
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-neutral-500">
               <button
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-full transition-colors"
                 title="Atualizar agora"
               >
                 <RefreshCw size={18} className={isRefreshing ? 'animate-spin' : ''} />
@@ -151,26 +151,26 @@ export function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <div className="text-center">
-                <p className="text-gray-600 text-sm font-semibold mb-1">Total de OPs</p>
+                <p className="text-gray-600 dark:text-neutral-400 text-sm font-semibold mb-1">Total de OPs</p>
                 <p className="text-4xl font-bold text-blue-600">{stats.total_ops}</p>
               </div>
             </Card>
             <Card>
               <div className="text-center">
-                <p className="text-gray-600 text-sm font-semibold mb-1">Em Produção</p>
+                <p className="text-gray-600 dark:text-neutral-400 text-sm font-semibold mb-1">Em Produção</p>
                 <p className="text-4xl font-bold text-orange-600">{stats.ops_em_producao}</p>
               </div>
             </Card>
             <Card>
               <div className="text-center">
-                <p className="text-gray-600 text-sm font-semibold mb-1">Finalizadas (mês)</p>
+                <p className="text-gray-600 dark:text-neutral-400 text-sm font-semibold mb-1">Finalizadas (mês)</p>
                 <p className="text-4xl font-bold text-green-600">{stats.ops_finalizadas_mes}</p>
               </div>
             </Card>
             {hasPermission('financeiro') && (
               <Card>
                 <div className="text-center">
-                  <p className="text-gray-600 text-sm font-semibold mb-1">A Receber</p>
+                  <p className="text-gray-600 dark:text-neutral-400 text-sm font-semibold mb-1">A Receber</p>
                   <p className="text-4xl font-bold text-purple-600">
                     {new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
@@ -191,21 +191,21 @@ export function Dashboard() {
                 <Bell className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Novos Orçamentos</h3>
-                <p className="text-sm text-gray-600">Trabalhos aguardando produção</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-neutral-100">Novos Orçamentos</h3>
+                <p className="text-sm text-gray-600 dark:text-neutral-400">Trabalhos aguardando produção</p>
               </div>
             </div>
             <div className="space-y-3">
               {orcamentosRecentes.map((orc) => (
                 <div
                   key={orc.id}
-                  className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-100"
+                  className="flex items-center justify-between p-3 bg-white dark:bg-neutral-900 rounded-lg border border-blue-100 dark:border-neutral-800"
                 >
                   <div className="flex items-center gap-3">
                     <FileText className="w-5 h-5 text-blue-500" />
                     <div>
-                      <p className="font-semibold text-gray-900">{orc.nome_peca}</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="font-semibold text-gray-900 dark:text-neutral-100">{orc.nome_peca}</p>
+                      <p className="text-sm text-gray-600 dark:text-neutral-400">
                         {orc.cliente} • {orc.quantidade} unid.
                       </p>
                     </div>
@@ -218,7 +218,7 @@ export function Dashboard() {
                     }`}>
                       {orc.status === 'aprovado' ? 'Aprovado' : 'Enviado'}
                     </span>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-neutral-500 mt-1">
                       {format(new Date(orc.created_at), 'dd/MM/yyyy')}
                     </p>
                   </div>
@@ -270,11 +270,11 @@ export function Dashboard() {
 
             {loading ? (
               <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">Carregando...</p>
+                <p className="text-gray-600 dark:text-neutral-400 text-lg">Carregando...</p>
               </div>
             ) : filteredOps.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">Nenhuma ordem de produção encontrada</p>
+                <p className="text-gray-600 dark:text-neutral-400 text-lg">Nenhuma ordem de produção encontrada</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -282,12 +282,12 @@ export function Dashboard() {
                   <div
                     key={op.id}
                     onClick={() => navigate(`/op/${op.id}`)}
-                    className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition-all cursor-pointer"
+                    className="p-4 border border-gray-200 dark:border-neutral-800 rounded-lg hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-sm dark:hover:bg-neutral-800/30 transition-all cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-2">
-                          <h3 className="text-xl font-bold text-gray-900">{op.codigo}</h3>
+                          <h3 className="text-sm font-mono font-semibold px-2.5 py-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800">{op.codigo}</h3>
                           <StatusBadge status={op.status_producao || op.status} type="producao" />
                           {op.status_financeiro && op.status_financeiro !== 'pendente' && (
                             <StatusBadge status={op.status_financeiro} type="financeiro" />
@@ -295,20 +295,20 @@ export function Dashboard() {
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                           <div>
-                            <p className="text-gray-600 font-semibold">Cliente</p>
-                            <p className="text-gray-900">{op.cliente}</p>
+                            <p className="text-gray-600 dark:text-neutral-400 font-semibold">Cliente</p>
+                            <p className="text-gray-900 dark:text-neutral-100">{op.cliente}</p>
                           </div>
                           <div>
-                            <p className="text-gray-600 font-semibold">Peça</p>
-                            <p className="text-gray-900">{op.nome_peca}</p>
+                            <p className="text-gray-600 dark:text-neutral-400 font-semibold">Peça</p>
+                            <p className="text-gray-900 dark:text-neutral-100">{op.nome_peca}</p>
                           </div>
                           <div>
-                            <p className="text-gray-600 font-semibold">Quantidade</p>
-                            <p className="text-gray-900">{op.quantidade_total}</p>
+                            <p className="text-gray-600 dark:text-neutral-400 font-semibold">Quantidade</p>
+                            <p className="text-gray-900 dark:text-neutral-100">{op.quantidade_total}</p>
                           </div>
                           <div>
-                            <p className="text-gray-600 font-semibold">Data Início</p>
-                            <p className="text-gray-900">{format(new Date(op.data_inicio), 'dd/MM/yyyy')}</p>
+                            <p className="text-gray-600 dark:text-neutral-400 font-semibold">Data Início</p>
+                            <p className="text-gray-900 dark:text-neutral-100">{format(new Date(op.data_inicio), 'dd/MM/yyyy')}</p>
                           </div>
                         </div>
                       </div>

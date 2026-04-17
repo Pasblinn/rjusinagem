@@ -34,13 +34,13 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 dark:from-neutral-900 dark:to-neutral-950 px-4">
       {toast && <Toast {...toast} onClose={() => setToast(null)} />}
 
       <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">RJ Usinagem</h1>
-          <p className="text-gray-600 text-lg">Sistema de Gestão de Produção</p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-neutral-100 mb-2">RJ Usinagem</h1>
+          <p className="text-gray-600 dark:text-neutral-400 text-lg">Sistema de Gestão de Produção</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

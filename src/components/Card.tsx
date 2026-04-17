@@ -10,16 +10,16 @@ interface CardProps {
 export function Card({ children, className = '', padding = 'md', onClick }: CardProps) {
   const paddingClasses = {
     none: '',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
+    sm: 'p-3',
+    md: 'p-4',
+    lg: 'p-6',
   }
 
-  const clickableClass = onClick ? 'cursor-pointer' : ''
+  const clickableClass = onClick ? 'cursor-pointer hover:border-gray-300 dark:hover:border-neutral-700' : ''
 
   return (
     <div
-      className={`bg-white rounded-xl shadow-lg border border-gray-200 ${paddingClasses[padding]} ${clickableClass} ${className}`}
+      className={`bg-white dark:bg-neutral-900 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-100 transition-colors ${paddingClasses[padding]} ${clickableClass} ${className}`}
       onClick={onClick}
     >
       {children}

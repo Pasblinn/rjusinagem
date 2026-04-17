@@ -30,3 +30,6 @@ Thumbs.db
 
 # Electron
 out/
+
+# Claude Code session data
+.claude/

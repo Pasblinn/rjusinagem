@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const log = require('electron-log')
 const { autoUpdater } = require('electron-updater')
@@ -39,6 +39,12 @@ function createWindow() {
 // ═══════════════════════════════════════════════════════════
 // Auto Update - busca atualizações do GitHub Releases
 // ═══════════════════════════════════════════════════════════
+function sendUpdateStatus(payload) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('update-status', payload)
+  }
+}
+
 function setupAutoUpdater() {
   if (isDev) return
 
@@ -47,47 +53,48 @@ function setupAutoUpdater() {
 
   autoUpdater.on('checking-for-update', () => {
     log.info('Verificando atualizações...')
+    sendUpdateStatus({ state: 'checking' })
   })
 
   autoUpdater.on('update-available', (info) => {
     log.info('Atualização disponível:', info.version)
-    dialog.showMessageBox(mainWindow, {
-      type: 'info',
-      title: 'Atualização disponível',
-      message: `Nova versão ${info.version} encontrada. O download será feito automaticamente.`,
-      buttons: ['OK']
-    })
+    sendUpdateStatus({ state: 'available', version: info.version })
   })
 
-  autoUpdater.on('update-not-available', (info) => {
+  autoUpdater.on('update-not-available', () => {
     log.info('Nenhuma atualização disponível. Versão atual:', app.getVersion())
+    sendUpdateStatus({ state: 'not-available' })
   })
 
   autoUpdater.on('download-progress', (progress) => {
     log.info(`Download: ${Math.round(progress.percent)}%`)
+    sendUpdateStatus({
+      state: 'downloading',
+      percent: progress.percent,
+      bytesPerSecond: progress.bytesPerSecond,
+      transferred: progress.transferred,
+      total: progress.total,
+    })
   })
 
   autoUpdater.on('update-downloaded', (info) => {
     log.info('Atualização baixada:', info.version)
-    dialog.showMessageBox(mainWindow, {
-      type: 'info',
-      title: 'Atualização pronta',
-      message: `A versão ${info.version} foi baixada. O aplicativo será reiniciado para aplicar a atualização.`,
-      buttons: ['Reiniciar agora', 'Mais tarde']
-    }).then((result) => {
-      if (result.response === 0) {
-        autoUpdater.quitAndInstall()
-      }
-    })
+    sendUpdateStatus({ state: 'downloaded', version: info.version })
   })
 
   autoUpdater.on('error', (err) => {
     log.error('Erro no auto-updater:', err)
+    sendUpdateStatus({ state: 'error', message: err.message || String(err) })
+  })
+
+  ipcMain.handle('update-install', () => {
+    autoUpdater.quitAndInstall()
   })
 
   // Verificar atualizações ao abrir
   autoUpdater.checkForUpdates().catch((err) => {
     log.error('Falha ao verificar atualizações:', err)
+    sendUpdateStatus({ state: 'error', message: err.message || String(err) })
   })
 }
 
