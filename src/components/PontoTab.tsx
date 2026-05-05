@@ -111,6 +111,26 @@ export function PontoTab({ userId }: PontoTabProps) {
     valor_hora: '',
   })
 
+  // Modais e estado de edição/criação/exclusão de registro
+  const [showCriarRegistroModal, setShowCriarRegistroModal] = useState(false)
+  const [showEditarRegistroModal, setShowEditarRegistroModal] = useState(false)
+  const [showExcluirRegistroModal, setShowExcluirRegistroModal] = useState(false)
+  const [registroSelecionado, setRegistroSelecionado] = useState<PontoDetalhado | null>(null)
+  const [registroSaving, setRegistroSaving] = useState(false)
+  const [criarRegistroForm, setCriarRegistroForm] = useState({
+    funcionario_id: '',
+    data: '',
+    hora_entrada: '',
+    hora_saida: '',
+    observacao: '',
+  })
+  const [editarRegistroForm, setEditarRegistroForm] = useState({
+    data: '',
+    hora_entrada: '',
+    hora_saida: '',
+    observacao: '',
+  })
+
   // Sub-aba
   const [subTab, setSubTab] = useState<'funcionarios' | 'registros' | 'resumo'>('funcionarios')
 
@@ -540,6 +560,141 @@ export function PontoTab({ userId }: PontoTabProps) {
     }
   }
 
+  function abrirCriarRegistro() {
+    const hoje = new Date().toISOString().split('T')[0]
+    setCriarRegistroForm({
+      funcionario_id: filtroFuncionario || (funcionarios[0]?.id ?? ''),
+      data: hoje,
+      hora_entrada: '08:00',
+      hora_saida: '17:00',
+      observacao: '',
+    })
+    setShowCriarRegistroModal(true)
+  }
+
+  function combinarDataHoraISO(data: string, hora: string): string {
+    return new Date(`${data}T${hora}:00`).toISOString()
+  }
+
+  async function handleCriarRegistroManual(e: React.FormEvent) {
+    e.preventDefault()
+    if (!criarRegistroForm.funcionario_id || !criarRegistroForm.data || !criarRegistroForm.hora_entrada) {
+      setToast({ message: 'Preencha funcionário, data e hora de entrada', type: 'error' })
+      return
+    }
+
+    if (criarRegistroForm.hora_saida && criarRegistroForm.hora_saida <= criarRegistroForm.hora_entrada) {
+      setToast({ message: 'A hora de saída deve ser maior que a hora de entrada', type: 'error' })
+      return
+    }
+
+    setRegistroSaving(true)
+    try {
+      await api.createRegistroPontoManual({
+        funcionario_id: criarRegistroForm.funcionario_id,
+        data: criarRegistroForm.data,
+        hora_entrada: combinarDataHoraISO(criarRegistroForm.data, criarRegistroForm.hora_entrada),
+        hora_saida: criarRegistroForm.hora_saida
+          ? combinarDataHoraISO(criarRegistroForm.data, criarRegistroForm.hora_saida)
+          : undefined,
+        observacao: criarRegistroForm.observacao || undefined,
+      }, userId)
+
+      setToast({ message: 'Registro criado com sucesso!', type: 'success' })
+      setShowCriarRegistroModal(false)
+      loadRegistros()
+      loadResumo()
+    } catch (error: any) {
+      setToast({ message: error.message || 'Erro ao criar registro', type: 'error' })
+    } finally {
+      setRegistroSaving(false)
+    }
+  }
+
+  function abrirEditarRegistro(reg: PontoDetalhado) {
+    const horaEntradaLocal = reg.hora_entrada
+      ? new Date(reg.hora_entrada).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false })
+      : ''
+    const horaSaidaLocal = reg.hora_saida
+      ? new Date(reg.hora_saida).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false })
+      : ''
+
+    setRegistroSelecionado(reg)
+    setEditarRegistroForm({
+      data: reg.data,
+      hora_entrada: horaEntradaLocal,
+      hora_saida: horaSaidaLocal,
+      observacao: reg.observacao || '',
+    })
+    setShowEditarRegistroModal(true)
+  }
+
+  async function handleSalvarEdicaoRegistro(e: React.FormEvent) {
+    e.preventDefault()
+    if (!registroSelecionado) return
+
+    if (editarRegistroForm.hora_saida && editarRegistroForm.hora_entrada
+        && editarRegistroForm.hora_saida <= editarRegistroForm.hora_entrada) {
+      setToast({ message: 'A hora de saída deve ser maior que a hora de entrada', type: 'error' })
+      return
+    }
+
+    setRegistroSaving(true)
+    try {
+      const updates: { hora_entrada?: string; hora_saida?: string; observacao?: string } = {}
+
+      if (editarRegistroForm.hora_entrada) {
+        updates.hora_entrada = combinarDataHoraISO(editarRegistroForm.data, editarRegistroForm.hora_entrada)
+      }
+      if (editarRegistroForm.hora_saida) {
+        updates.hora_saida = combinarDataHoraISO(editarRegistroForm.data, editarRegistroForm.hora_saida)
+      }
+      if (editarRegistroForm.observacao !== (registroSelecionado.observacao || '')) {
+        updates.observacao = editarRegistroForm.observacao
+      }
+
+      if (Object.keys(updates).length === 0) {
+        setToast({ message: 'Nenhuma alteração para salvar', type: 'error' })
+        setRegistroSaving(false)
+        return
+      }
+
+      await api.updateRegistroPonto(registroSelecionado.id, updates, userId)
+
+      setToast({ message: 'Registro atualizado com sucesso!', type: 'success' })
+      setShowEditarRegistroModal(false)
+      setRegistroSelecionado(null)
+      loadRegistros()
+      loadResumo()
+    } catch (error: any) {
+      setToast({ message: error.message || 'Erro ao atualizar registro', type: 'error' })
+    } finally {
+      setRegistroSaving(false)
+    }
+  }
+
+  function abrirExcluirRegistro(reg: PontoDetalhado) {
+    setRegistroSelecionado(reg)
+    setShowExcluirRegistroModal(true)
+  }
+
+  async function confirmarExclusaoRegistro() {
+    if (!registroSelecionado) return
+    setRegistroSaving(true)
+    try {
+      await api.deleteRegistroPonto(registroSelecionado.id)
+      setToast({ message: 'Registro excluído com sucesso!', type: 'success' })
+      setShowExcluirRegistroModal(false)
+      setRegistroSelecionado(null)
+      loadRegistros()
+      loadResumo()
+    } catch (error: any) {
+      setToast({ message: error.message || 'Erro ao excluir registro', type: 'error' })
+    } finally {
+      setRegistroSaving(false)
+    }
+  }
+
   // Filtrar funcionários por busca
   const funcionariosFiltrados = funcionarios.filter(f =>
     f.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -756,6 +911,10 @@ export function PontoTab({ userId }: PontoTabProps) {
               <RefreshCw size={18} className="mr-2" />
               Atualizar
             </Button>
+            <Button onClick={abrirCriarRegistro} variant="primary">
+              <Plus size={18} className="mr-2" />
+              Novo registro manual
+            </Button>
           </div>
 
           {/* Tabela de registros */}
@@ -770,6 +929,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                   <th className="text-left p-3 font-semibold">Total</th>
                   <th className="text-left p-3 font-semibold">Status</th>
                   <th className="text-left p-3 font-semibold">Origem</th>
+                  <th className="text-right p-3 font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -799,6 +959,24 @@ export function PontoTab({ userId }: PontoTabProps) {
                       </span>
                     </td>
                     <td className="p-3 text-sm text-gray-500 dark:text-neutral-500">{reg.origem}</td>
+                    <td className="p-3">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => abrirEditarRegistro(reg)}
+                          className="p-2 text-gray-600 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-lg"
+                          title="Editar registro"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button
+                          onClick={() => abrirExcluirRegistro(reg)}
+                          className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-neutral-800 rounded-lg"
+                          title="Excluir registro"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -1367,6 +1545,231 @@ export function PontoTab({ userId }: PontoTabProps) {
               >
                 <Download size={14} className="mr-1" />
                 PDF
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Modal: Criar Registro Manual */}
+      <Modal
+        isOpen={showCriarRegistroModal}
+        onClose={() => {
+          if (registroSaving) return
+          setShowCriarRegistroModal(false)
+        }}
+        title="Novo registro manual"
+      >
+        <form onSubmit={handleCriarRegistroManual} className="space-y-4">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-sm text-blue-800 dark:text-blue-300">
+            Use para lançar um dia em que o funcionário esqueceu de bater ponto.
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Funcionário *</label>
+            <select
+              value={criarRegistroForm.funcionario_id}
+              onChange={(e) => setCriarRegistroForm({ ...criarRegistroForm, funcionario_id: e.target.value })}
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              required
+            >
+              <option value="">Selecione...</option>
+              {funcionarios.filter(f => f.ativo).map((f) => (
+                <option key={f.id} value={f.id}>{f.nome}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Data *</label>
+            <input
+              type="date"
+              value={criarRegistroForm.data}
+              onChange={(e) => setCriarRegistroForm({ ...criarRegistroForm, data: e.target.value })}
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Entrada *</label>
+              <input
+                type="time"
+                value={criarRegistroForm.hora_entrada}
+                onChange={(e) => setCriarRegistroForm({ ...criarRegistroForm, hora_entrada: e.target.value })}
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Saída</label>
+              <input
+                type="time"
+                value={criarRegistroForm.hora_saida}
+                onChange={(e) => setCriarRegistroForm({ ...criarRegistroForm, hora_saida: e.target.value })}
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Observação</label>
+            <textarea
+              value={criarRegistroForm.observacao}
+              onChange={(e) => setCriarRegistroForm({ ...criarRegistroForm, observacao: e.target.value })}
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              rows={2}
+              placeholder="Ex: Esqueceu de bater ponto"
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowCriarRegistroModal(false)}
+              disabled={registroSaving}
+            >
+              Cancelar
+            </Button>
+            <Button type="submit" variant="primary" size="sm" disabled={registroSaving}>
+              {registroSaving ? 'Salvando...' : 'Criar registro'}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Modal: Editar Registro */}
+      <Modal
+        isOpen={showEditarRegistroModal}
+        onClose={() => {
+          if (registroSaving) return
+          setShowEditarRegistroModal(false)
+          setRegistroSelecionado(null)
+        }}
+        title={registroSelecionado ? `Editar registro — ${registroSelecionado.funcionario_nome}` : 'Editar registro'}
+      >
+        {registroSelecionado && (
+          <form onSubmit={handleSalvarEdicaoRegistro} className="space-y-4">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-sm text-yellow-800 dark:text-yellow-300">
+              Edite só o que precisa corrigir. Campos vazios serão removidos.
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Data</label>
+              <input
+                type="date"
+                value={editarRegistroForm.data}
+                readOnly
+                disabled
+                className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-800 text-gray-500 dark:text-neutral-400 rounded-md cursor-not-allowed"
+              />
+              <p className="text-xs text-gray-500 dark:text-neutral-500 mt-1">
+                Para mover o registro para outro dia, exclua-o e crie um novo.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Entrada</label>
+                <input
+                  type="time"
+                  value={editarRegistroForm.hora_entrada}
+                  onChange={(e) => setEditarRegistroForm({ ...editarRegistroForm, hora_entrada: e.target.value })}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Saída</label>
+                <input
+                  type="time"
+                  value={editarRegistroForm.hora_saida}
+                  onChange={(e) => setEditarRegistroForm({ ...editarRegistroForm, hora_saida: e.target.value })}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Observação</label>
+              <textarea
+                value={editarRegistroForm.observacao}
+                onChange={(e) => setEditarRegistroForm({ ...editarRegistroForm, observacao: e.target.value })}
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                rows={2}
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setShowEditarRegistroModal(false)
+                  setRegistroSelecionado(null)
+                }}
+                disabled={registroSaving}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" variant="primary" size="sm" disabled={registroSaving}>
+                {registroSaving ? 'Salvando...' : 'Salvar alterações'}
+              </Button>
+            </div>
+          </form>
+        )}
+      </Modal>
+
+      {/* Modal: Confirmar Exclusão de Registro */}
+      <Modal
+        isOpen={showExcluirRegistroModal}
+        onClose={() => {
+          if (registroSaving) return
+          setShowExcluirRegistroModal(false)
+          setRegistroSelecionado(null)
+        }}
+        title="Excluir registro"
+      >
+        {registroSelecionado && (
+          <div className="space-y-4">
+            <div className="bg-red-50 border border-red-200 dark:bg-red-900/20 dark:border-red-800 rounded-lg p-4">
+              <p className="text-red-800 dark:text-red-300 font-medium">
+                Apagar o registro abaixo?
+              </p>
+              <div className="mt-3 text-sm text-red-700 dark:text-red-300 space-y-1">
+                <p><strong>Funcionário:</strong> {registroSelecionado.funcionario_nome}</p>
+                <p><strong>Data:</strong> {formatDate(registroSelecionado.data)}</p>
+                <p><strong>Entrada:</strong> {formatTime(registroSelecionado.hora_entrada)}</p>
+                <p><strong>Saída:</strong> {formatTime(registroSelecionado.hora_saida)}</p>
+                <p><strong>Origem:</strong> {registroSelecionado.origem}</p>
+              </div>
+              <p className="text-red-600 dark:text-red-400 text-xs mt-3">
+                Esta ação não pode ser desfeita.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setShowExcluirRegistroModal(false)
+                  setRegistroSelecionado(null)
+                }}
+                disabled={registroSaving}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={confirmarExclusaoRegistro}
+                disabled={registroSaving}
+              >
+                {registroSaving ? 'Excluindo...' : 'Excluir registro'}
               </Button>
             </div>
           </div>
