@@ -29,6 +29,12 @@ jobs:
         run: npm ci
 
       - name: Run tests
+        env:
+          # createClient() do supabase-js exige URL valida no import-time.
+          # Em CI nao temos .env (gitignored), entao injetamos fakes para os
+          # testes de smoke do client (nenhum teste faz request real).
+          VITE_SUPABASE_URL: https://example.supabase.co
+          VITE_SUPABASE_ANON_KEY: eyJfake_key_for_ci_only
         run: npm run test:run
 
       - name: Build & publish to GitHub Releases
