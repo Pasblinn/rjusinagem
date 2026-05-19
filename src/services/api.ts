@@ -1751,6 +1751,16 @@ export const api = {
     return data
   },
 
+  // Excluir registro de ponto (ajuste, batida duplicada, etc)
+  async deleteRegistroPonto(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('registro_ponto')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+  },
+
   // Calcular total de horas em um período
   async calcularHorasTrabalhadas(filtros: {
     funcionarioId?: string
