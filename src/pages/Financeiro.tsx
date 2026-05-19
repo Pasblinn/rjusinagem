@@ -889,13 +889,13 @@ export function Financeiro() {
 
   function getOrcamentoStatusColor(status: OrcamentoStatus): string {
     const colors: Record<OrcamentoStatus, string> = {
-      rascunho: 'bg-gray-100 text-gray-700 dark:text-neutral-300 border-gray-300',
+      rascunho: 'bg-gray-100 text-gray-700 dark:text-slate-300 border-gray-300',
       aberto: 'bg-blue-100 text-blue-700 border-blue-300',
       enviado: 'bg-yellow-100 text-yellow-700 border-yellow-300',
       aprovado: 'bg-green-100 text-green-700 border-green-300',
       reprovado: 'bg-red-100 text-red-700 border-red-300',
       convertido: 'bg-purple-100 text-purple-700 border-purple-300',
-      cancelado: 'bg-gray-100 text-gray-500 dark:text-neutral-500 border-gray-300',
+      cancelado: 'bg-gray-100 text-gray-500 dark:text-slate-500 border-gray-300',
     }
     return colors[status] || colors.rascunho
   }
@@ -950,7 +950,7 @@ export function Financeiro() {
     return (
       <Layout>
         <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-neutral-400 text-lg">Carregando...</p>
+          <p className="text-gray-600 dark:text-slate-400 text-lg">Carregando...</p>
         </div>
       </Layout>
     )
@@ -977,16 +977,16 @@ export function Financeiro() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">Financeiro</h2>
-            <p className="text-gray-600 dark:text-neutral-400 mt-1">Gestão financeira completa</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Financeiro</h2>
+            <p className="text-gray-600 dark:text-slate-400 mt-1">Gestão financeira completa</p>
           </div>
           <div className="flex items-center gap-4">
             {/* Indicador de última atualização */}
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-neutral-500">
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-slate-500">
               <button
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                 title="Atualizar agora"
               >
                 <RefreshCw size={18} className={isRefreshing ? 'animate-spin' : ''} />
@@ -1011,7 +1011,7 @@ export function Financeiro() {
                 className={`flex items-center px-6 py-4 text-lg font-semibold border-b-4 transition-colors ${
                   activeTab === tab.id
                     ? 'border-blue-600 text-blue-600 bg-blue-50'
-                    : 'border-transparent text-gray-500 dark:text-neutral-500 hover:text-gray-700 dark:text-neutral-300 hover:border-gray-300'
+                    : 'border-transparent text-gray-500 dark:text-slate-500 hover:text-gray-700 dark:text-slate-300 hover:border-gray-300'
                 }`}
               >
                 <tab.icon size={20} className="mr-2" />
@@ -1176,9 +1176,9 @@ export function Financeiro() {
         <form onSubmit={handleRegistrarPagamentoAvulso} className="space-y-4">
           {contaAvulsaParaPagar && (
             <div className="bg-blue-50 p-3 rounded-lg">
-              <p className="text-sm text-gray-600 dark:text-neutral-400">Descrição: <strong>{contaAvulsaParaPagar.descricao}</strong></p>
-              <p className="text-sm text-gray-600 dark:text-neutral-400">Valor total: <strong>{formatCurrency(contaAvulsaParaPagar.valor_total)}</strong></p>
-              <p className="text-sm text-gray-600 dark:text-neutral-400">Já recebido: <strong>{formatCurrency(contaAvulsaParaPagar.valor_pago)}</strong></p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Descrição: <strong>{contaAvulsaParaPagar.descricao}</strong></p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Valor total: <strong>{formatCurrency(contaAvulsaParaPagar.valor_total)}</strong></p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Já recebido: <strong>{formatCurrency(contaAvulsaParaPagar.valor_pago)}</strong></p>
               <p className="text-sm font-semibold text-orange-600">Pendente: {formatCurrency(contaAvulsaParaPagar.valor_total - contaAvulsaParaPagar.valor_pago)}</p>
             </div>
           )}
@@ -1217,7 +1217,7 @@ export function Financeiro() {
         <form onSubmit={handleSalvarOrcamento} className="space-y-6">
           {/* Seção: Dados do Cliente */}
           <div className="bg-gray-50 p-4 rounded-lg space-y-4">
-            <h3 className="font-semibold text-gray-700 dark:text-neutral-300 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2">
               <Users size={18} />
               Dados do Cliente
             </h3>
@@ -1281,7 +1281,7 @@ export function Financeiro() {
           {/* Seção: Itens do Orçamento */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-gray-700 dark:text-neutral-300 flex items-center gap-2">
+              <h3 className="font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2">
                 <ClipboardList size={18} />
                 Itens do Orçamento
               </h3>
@@ -1295,7 +1295,7 @@ export function Financeiro() {
               {orcamentoItens.map((item, index) => (
                 <div key={index} className="bg-gray-50 p-4 rounded-lg space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-600 dark:text-neutral-400">Item {index + 1}</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-slate-400">Item {index + 1}</span>
                     {orcamentoItens.length > 1 && (
                       <button
                         type="button"
@@ -1333,8 +1333,8 @@ export function Financeiro() {
                       required
                     />
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Subtotal</label>
-                      <div className="h-10 flex items-center px-3 bg-gray-100 rounded-lg text-gray-700 dark:text-neutral-300 font-medium">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Subtotal</label>
+                      <div className="h-10 flex items-center px-3 bg-gray-100 rounded-lg text-gray-700 dark:text-slate-300 font-medium">
                         {formatCurrency(
                           (parseInt(item.quantidade) || 0) * (parseFloat(item.valor_unitario) || 0)
                         )}
@@ -1477,7 +1477,7 @@ export function Financeiro() {
                         className={`px-3 py-2 rounded border-2 text-sm font-medium transition ${
                           financeiroForm.intervalo_dias === d.toString()
                             ? 'bg-blue-600 text-white border-blue-600'
-                            : 'bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 hover:border-blue-400 dark:text-neutral-200'
+                            : 'bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-700 hover:border-blue-400 dark:text-slate-200'
                         }`}
                       >
                         {d} dias
@@ -1489,13 +1489,13 @@ export function Financeiro() {
                       max="365"
                       value={financeiroForm.intervalo_dias}
                       onChange={(e) => setFinanceiroForm({ ...financeiroForm, intervalo_dias: e.target.value })}
-                      className="w-24 px-3 py-2 rounded border-2 border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 text-sm"
+                      className="w-24 px-3 py-2 rounded border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 text-sm"
                       placeholder="Dias"
                     />
                   </div>
                 </div>
                 {financeiroForm.valor_total && parseInt(financeiroForm.num_parcelas) > 1 && financeiroForm.primeira_data_parcela && (
-                  <div className="col-span-2 text-sm text-blue-700 dark:text-blue-300 bg-white dark:bg-neutral-900 p-2 rounded border border-blue-200 dark:border-neutral-800">
+                  <div className="col-span-2 text-sm text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-900 p-2 rounded border border-blue-200 dark:border-slate-800">
                     <div>
                       {parseInt(financeiroForm.num_parcelas)}x de{' '}
                       <strong>{formatCurrency(parseFloat(financeiroForm.valor_total) / parseInt(financeiroForm.num_parcelas))}</strong>
@@ -1522,7 +1522,7 @@ export function Financeiro() {
                 <p className="font-semibold text-blue-800 text-sm">Parcelas:</p>
                 {parcelas.map((p) => (
                   <div key={p.id} className={`flex items-center justify-between p-2 rounded text-sm ${
-                    p.status === 'pago' ? 'bg-green-100 dark:bg-emerald-900/30' : p.status === 'atrasado' ? 'bg-red-100 dark:bg-red-900/30' : 'bg-white dark:bg-neutral-900'
+                    p.status === 'pago' ? 'bg-green-100 dark:bg-emerald-900/30' : p.status === 'atrasado' ? 'bg-red-100 dark:bg-red-900/30' : 'bg-white dark:bg-slate-900'
                   }`}>
                     <span>Parcela {p.numero_parcela}/{parcelas.length}</span>
                     <span className="font-semibold">{formatCurrency(p.valor)}</span>
@@ -1583,13 +1583,13 @@ export function Financeiro() {
       >
         <form onSubmit={handleRegistrarPagamento} className="space-y-4">
           <div className="p-4 bg-gray-50 rounded-lg mb-4">
-            <p className="text-gray-600 dark:text-neutral-400">
+            <p className="text-gray-600 dark:text-slate-400">
               Cliente: <strong>{selectedConta?.cliente}</strong>
             </p>
-            <p className="text-gray-600 dark:text-neutral-400">
+            <p className="text-gray-600 dark:text-slate-400">
               Valor Total: <strong>{formatCurrency(selectedConta?.valor_total || 0)}</strong>
             </p>
-            <p className="text-gray-600 dark:text-neutral-400">
+            <p className="text-gray-600 dark:text-slate-400">
               Já Pago: <strong>{formatCurrency(selectedConta?.valor_pago || 0)}</strong>
             </p>
             <p className="text-lg font-bold text-blue-600 mt-2">
@@ -1684,16 +1684,16 @@ export function Financeiro() {
       >
         <div className="space-y-4">
           <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-600 dark:text-neutral-400">
+            <p className="text-gray-600 dark:text-slate-400">
               Cliente: <strong>{selectedOP?.cliente}</strong>
             </p>
-            <p className="text-gray-600 dark:text-neutral-400">
+            <p className="text-gray-600 dark:text-slate-400">
               Peça: <strong>{selectedOP?.nome_peca}</strong>
             </p>
           </div>
 
           {movimentosHistorico.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 dark:text-neutral-500">
+            <div className="text-center py-8 text-gray-500 dark:text-slate-500">
               <History size={48} className="mx-auto mb-4 opacity-50" />
               <p>Nenhum movimento registrado ainda</p>
             </div>
@@ -1715,17 +1715,17 @@ export function Financeiro() {
                       <p className="font-semibold capitalize">
                         {mov.tipo.replace('_', ' ')}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-neutral-400">
+                      <p className="text-sm text-gray-600 dark:text-slate-400">
                         {new Date(mov.created_at).toLocaleDateString('pt-BR')}{' '}
                         {new Date(mov.created_at).toLocaleTimeString('pt-BR')}
                       </p>
                       {mov.forma_pagamento && (
-                        <p className="text-sm text-gray-500 dark:text-neutral-500">
+                        <p className="text-sm text-gray-500 dark:text-slate-500">
                           Forma: {mov.forma_pagamento}
                         </p>
                       )}
                       {mov.observacao && (
-                        <p className="text-sm text-gray-500 dark:text-neutral-500 mt-1">
+                        <p className="text-sm text-gray-500 dark:text-slate-500 mt-1">
                           {mov.observacao}
                         </p>
                       )}
@@ -1739,7 +1739,7 @@ export function Financeiro() {
                         {mov.tipo === 'estorno' || mov.tipo === 'cancelamento' ? '-' : '+'}
                         {formatCurrency(mov.valor)}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-neutral-500">
+                      <p className="text-sm text-gray-500 dark:text-slate-500">
                         Saldo: {formatCurrency(mov.saldo_atual)}
                       </p>
                     </div>
@@ -1820,10 +1820,10 @@ function DashboardTab({ data, despesasData, onTabChange }: DashboardTabProps) {
               />
             </div>
             <div>
-              <p className="text-gray-600 dark:text-neutral-400 text-lg">Pagamentos Atrasados</p>
+              <p className="text-gray-600 dark:text-slate-400 text-lg">Pagamentos Atrasados</p>
               <p
                 className={`text-3xl font-bold ${
-                  data.ops_atrasadas > 0 ? 'text-red-600' : 'text-gray-700 dark:text-neutral-300'
+                  data.ops_atrasadas > 0 ? 'text-red-600' : 'text-gray-700 dark:text-slate-300'
                 }`}
               >
                 {data.ops_atrasadas}
@@ -1841,7 +1841,7 @@ function DashboardTab({ data, despesasData, onTabChange }: DashboardTabProps) {
               <Clock size={32} className="text-yellow-600" />
             </div>
             <div>
-              <p className="text-gray-600 dark:text-neutral-400 text-lg">Aguardando Pagamento</p>
+              <p className="text-gray-600 dark:text-slate-400 text-lg">Aguardando Pagamento</p>
               <p className="text-3xl font-bold text-yellow-600">{data.ops_aguardando_pagamento}</p>
             </div>
           </div>
@@ -1858,7 +1858,7 @@ function DashboardTab({ data, despesasData, onTabChange }: DashboardTabProps) {
               <Receipt size={32} className="text-orange-600" />
             </div>
             <div>
-              <p className="text-gray-600 dark:text-neutral-400 text-lg">OPs sem Nota Fiscal</p>
+              <p className="text-gray-600 dark:text-slate-400 text-lg">OPs sem Nota Fiscal</p>
               <p className="text-3xl font-bold text-orange-600">{data.ops_sem_nota}</p>
             </div>
           </div>
@@ -1868,7 +1868,7 @@ function DashboardTab({ data, despesasData, onTabChange }: DashboardTabProps) {
       {/* Contas a Pagar - Despesas */}
       {despesasData && (
         <div className="mt-6">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-neutral-100 mb-4 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-slate-100 mb-4 flex items-center gap-2">
             <CreditCard size={24} className="text-red-500" />
             Contas a Pagar
           </h3>
@@ -2009,7 +2009,7 @@ function OrcamentosTab({
       {/* Lista */}
       {orcamentos.length === 0 ? (
         <Card>
-          <p className="text-gray-600 dark:text-neutral-400 text-center py-8 text-lg">Nenhum orçamento encontrado</p>
+          <p className="text-gray-600 dark:text-slate-400 text-center py-8 text-lg">Nenhum orçamento encontrado</p>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -2018,25 +2018,25 @@ function OrcamentosTab({
               <div className="flex items-center justify-between">
                 <div className="flex-1 grid grid-cols-5 gap-4">
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Cliente</p>
-                    <p className="text-gray-900 dark:text-neutral-100 font-medium">{orc.cliente}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Cliente</p>
+                    <p className="text-gray-900 dark:text-slate-100 font-medium">{orc.cliente}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Peça</p>
-                    <p className="text-gray-900 dark:text-neutral-100">{orc.nome_peca}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Peça</p>
+                    <p className="text-gray-900 dark:text-slate-100">{orc.nome_peca}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Quantidade</p>
-                    <p className="text-gray-900 dark:text-neutral-100">{orc.quantidade}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Quantidade</p>
+                    <p className="text-gray-900 dark:text-slate-100">{orc.quantidade}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Valor</p>
-                    <p className="text-gray-900 dark:text-neutral-100 font-bold text-lg">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Valor</p>
+                    <p className="text-gray-900 dark:text-slate-100 font-bold text-lg">
                       {formatCurrency(orc.valor_estimado)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400 mb-1">Status</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400 mb-1">Status</p>
                     <span
                       className={`inline-block px-3 py-1 rounded-full text-sm font-semibold border-2 ${getStatusColor(
                         orc.status
@@ -2089,7 +2089,7 @@ function OrcamentosTab({
                 </div>
               </div>
               {orc.observacoes && (
-                <p className="text-sm text-gray-500 dark:text-neutral-500 mt-3 pt-3 border-t">
+                <p className="text-sm text-gray-500 dark:text-slate-500 mt-3 pt-3 border-t">
                   Obs: {orc.observacoes}
                 </p>
               )}
@@ -2158,8 +2158,8 @@ function ContasReceberTab({
       {/* Resumo */}
       <div className="grid grid-cols-3 gap-4">
         <Card className="bg-gray-50">
-          <p className="text-gray-600 dark:text-neutral-400">Total</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-neutral-100">{formatCurrency(totals.total)}</p>
+          <p className="text-gray-600 dark:text-slate-400">Total</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{formatCurrency(totals.total)}</p>
         </Card>
         <Card className="bg-green-50">
           <p className="text-green-600">Recebido</p>
@@ -2203,7 +2203,7 @@ function ContasReceberTab({
       {/* Contas Avulsas */}
       {contasAvulsas.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-700 dark:text-neutral-300 flex items-center gap-2">
+          <h3 className="font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2">
             <DollarSign size={18} className="text-purple-500" />
             Contas Avulsas ({contasAvulsas.length})
           </h3>
@@ -2217,23 +2217,23 @@ function ContasReceberTab({
               <div className="flex items-center justify-between">
                 <div className="flex-1 grid grid-cols-5 gap-4">
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Cliente</p>
-                    <p className="text-gray-900 dark:text-neutral-100 font-bold">{conta.cliente}</p>
-                    {conta.cnpj_cliente && <p className="text-xs text-gray-500 dark:text-neutral-500">{conta.cnpj_cliente}</p>}
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Cliente</p>
+                    <p className="text-gray-900 dark:text-slate-100 font-bold">{conta.cliente}</p>
+                    {conta.cnpj_cliente && <p className="text-xs text-gray-500 dark:text-slate-500">{conta.cnpj_cliente}</p>}
                   </div>
                   <div className="col-span-2">
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Descrição</p>
-                    <p className="text-gray-900 dark:text-neutral-100">{conta.descricao}</p>
-                    {conta.numero_documento && <p className="text-xs text-gray-500 dark:text-neutral-500">Doc: {conta.numero_documento}</p>}
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Descrição</p>
+                    <p className="text-gray-900 dark:text-slate-100">{conta.descricao}</p>
+                    {conta.numero_documento && <p className="text-xs text-gray-500 dark:text-slate-500">Doc: {conta.numero_documento}</p>}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Valor</p>
-                    <p className="font-bold text-gray-900 dark:text-neutral-100">{formatCurrency(conta.valor_total)}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Valor</p>
+                    <p className="font-bold text-gray-900 dark:text-slate-100">{formatCurrency(conta.valor_total)}</p>
                     {conta.valor_pago > 0 && <p className="text-xs text-green-600">Pago: {formatCurrency(conta.valor_pago)}</p>}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Vencimento</p>
-                    <p className="text-gray-900 dark:text-neutral-100">{formatDate(conta.data_vencimento)}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Vencimento</p>
+                    <p className="text-gray-900 dark:text-slate-100">{formatDate(conta.data_vencimento)}</p>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                       conta.status === 'pago' ? 'bg-green-100 text-green-700'
                       : conta.status === 'atrasado' ? 'bg-red-100 text-red-700'
@@ -2273,7 +2273,7 @@ function ContasReceberTab({
 
       {/* Modal confirmar exclusão avulsa */}
       <Modal isOpen={showExcluirAvulsaModal} onClose={() => setShowExcluirAvulsaModal(false)} title="Excluir Conta">
-        <p className="text-gray-600 dark:text-neutral-400 mb-6">Tem certeza que deseja excluir a conta de <strong>{avulsaParaExcluir?.cliente}</strong>?</p>
+        <p className="text-gray-600 dark:text-slate-400 mb-6">Tem certeza que deseja excluir a conta de <strong>{avulsaParaExcluir?.cliente}</strong>?</p>
         <div className="flex gap-3">
           <Button variant="secondary" fullWidth onClick={() => setShowExcluirAvulsaModal(false)}>Cancelar</Button>
           <Button variant="danger" fullWidth onClick={() => {
@@ -2287,7 +2287,7 @@ function ContasReceberTab({
       {/* Divisor */}
       {contasAvulsas.length > 0 && contas.length > 0 && (
         <div className="border-t-2 border-gray-200 pt-4">
-          <h3 className="font-semibold text-gray-700 dark:text-neutral-300 flex items-center gap-2 mb-3">
+          <h3 className="font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2 mb-3">
             <Receipt size={18} className="text-blue-500" />
             Contas de Ordens de Produção ({contas.length})
           </h3>
@@ -2297,7 +2297,7 @@ function ContasReceberTab({
       {/* Lista OPs */}
       {contas.length === 0 && contasAvulsas.length === 0 ? (
         <Card>
-          <p className="text-gray-600 dark:text-neutral-400 text-center py-8 text-lg">Nenhuma conta encontrada. Clique em "Nova Conta" para criar uma conta avulsa.</p>
+          <p className="text-gray-600 dark:text-slate-400 text-center py-8 text-lg">Nenhuma conta encontrada. Clique em "Nova Conta" para criar uma conta avulsa.</p>
         </Card>
       ) : contas.length === 0 ? null : (
         <div className="space-y-3">
@@ -2317,29 +2317,29 @@ function ContasReceberTab({
               <div className="flex items-center justify-between">
                 <div className="flex-1 grid grid-cols-6 gap-4">
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">OP</p>
-                    <p className="text-gray-900 dark:text-neutral-100 font-bold">{conta.codigo}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">OP</p>
+                    <p className="text-gray-900 dark:text-slate-100 font-bold">{conta.codigo}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Cliente</p>
-                    <p className="text-gray-900 dark:text-neutral-100">{conta.cliente}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Cliente</p>
+                    <p className="text-gray-900 dark:text-slate-100">{conta.cliente}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Valor Total</p>
-                    <p className="text-gray-900 dark:text-neutral-100 font-bold">{formatCurrency(conta.valor_total)}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Valor Total</p>
+                    <p className="text-gray-900 dark:text-slate-100 font-bold">{formatCurrency(conta.valor_total)}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Pago</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Pago</p>
                     <p className="text-green-600 font-bold">{formatCurrency(conta.valor_pago)}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Pendente</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Pendente</p>
                     <p className="text-orange-600 font-bold">
                       {formatCurrency(conta.valor_pendente)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400 mb-1">Situação</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400 mb-1">Situação</p>
                     <span
                       className={`inline-block px-3 py-1 rounded-full text-sm font-semibold border-2 ${getSituacaoColor(
                         conta.situacao_financeira
@@ -2367,7 +2367,7 @@ function ContasReceberTab({
                   </Button>
                 )}
               </div>
-              <div className="text-xs text-gray-500 dark:text-neutral-500 mt-3 pt-3 border-t flex gap-4">
+              <div className="text-xs text-gray-500 dark:text-slate-500 mt-3 pt-3 border-t flex gap-4">
                 <span>Peça: {conta.nome_peca}</span>
                 {conta.data_vencimento && <span>Vencimento: {formatDate(conta.data_vencimento)}</span>}
                 {conta.forma_pagamento && <span>Forma: {conta.forma_pagamento}</span>}
@@ -2430,7 +2430,7 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
 
       {/* Filtros financeiro */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 dark:text-neutral-500 uppercase mb-2">Financeiro</p>
+        <p className="text-xs font-semibold text-gray-500 dark:text-slate-500 uppercase mb-2">Financeiro</p>
         <div className="flex items-center gap-2 flex-wrap">
           {[
             { key: 'todos', label: 'Todos', color: '' },
@@ -2445,7 +2445,7 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
               className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${
                 statusFinanceiroFilter === f.key
                   ? 'bg-blue-600 text-white border-blue-600'
-                  : `bg-white dark:bg-neutral-900 ${f.color || 'text-gray-700 dark:text-neutral-300 border-gray-300 dark:border-neutral-700'} hover:border-blue-400`
+                  : `bg-white dark:bg-slate-900 ${f.color || 'text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-700'} hover:border-blue-400`
               }`}
             >
               {f.label}
@@ -2456,7 +2456,7 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
 
       {/* Filtros produção */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 dark:text-neutral-500 uppercase mb-2">Produção</p>
+        <p className="text-xs font-semibold text-gray-500 dark:text-slate-500 uppercase mb-2">Produção</p>
         <div className="flex items-center gap-2 flex-wrap">
           {[
             { key: 'todos', label: 'Todos' },
@@ -2471,7 +2471,7 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
               className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${
                 statusProducaoFilter === f.key
                   ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white dark:bg-neutral-900 text-gray-700 dark:text-neutral-300 border-gray-300 dark:border-neutral-700 hover:border-blue-400'
+                  : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-700 hover:border-blue-400'
               }`}
             >
               {f.label}
@@ -2480,11 +2480,11 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
         </div>
       </div>
 
-      <p className="text-sm text-gray-500 dark:text-neutral-500">{filteredOps.length} resultado(s)</p>
+      <p className="text-sm text-gray-500 dark:text-slate-500">{filteredOps.length} resultado(s)</p>
 
       {filteredOps.length === 0 ? (
         <Card>
-          <p className="text-gray-600 dark:text-neutral-400 text-center py-8 text-lg">Nenhuma ordem de produção encontrada</p>
+          <p className="text-gray-600 dark:text-slate-400 text-center py-8 text-lg">Nenhuma ordem de produção encontrada</p>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -2511,36 +2511,36 @@ function OPsFinanceiroTab({ ops, financeiros, onEditar, onVerHistorico }: OPsFin
                     {/* Linha principal - Cliente + Peça em destaque */}
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-xs font-mono font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded">{op.codigo}</span>
-                      <h4 className="text-lg font-bold text-gray-900 dark:text-neutral-100">{op.cliente}</h4>
-                      <span className="text-gray-500 dark:text-neutral-500">-</span>
-                      <span className="text-gray-700 dark:text-neutral-300 font-medium">{op.nome_peca}</span>
+                      <h4 className="text-lg font-bold text-gray-900 dark:text-slate-100">{op.cliente}</h4>
+                      <span className="text-gray-500 dark:text-slate-500">-</span>
+                      <span className="text-gray-700 dark:text-slate-300 font-medium">{op.nome_peca}</span>
                       {op.quantidade_total && (
-                        <span className="text-sm text-gray-500 dark:text-neutral-500">({op.quantidade_total} {op.unidade || 'unid.'})</span>
+                        <span className="text-sm text-gray-500 dark:text-slate-500">({op.quantidade_total} {op.unidade || 'unid.'})</span>
                       )}
                     </div>
                     {/* Linha de status e valores */}
                     <div className="flex items-center gap-6 flex-wrap">
                       <div>
-                        <span className="text-xs text-gray-500 dark:text-neutral-500">Produção: </span>
+                        <span className="text-xs text-gray-500 dark:text-slate-500">Produção: </span>
                         <StatusBadge status={op.status_producao || op.status} type="producao" />
                       </div>
                       <div>
-                        <span className="text-xs text-gray-500 dark:text-neutral-500">Pagamento: </span>
+                        <span className="text-xs text-gray-500 dark:text-slate-500">Pagamento: </span>
                         <StatusBadge status={statusPagamento} type="payment" />
                       </div>
                       <div>
-                        <span className="text-xs text-gray-500 dark:text-neutral-500">Valor: </span>
+                        <span className="text-xs text-gray-500 dark:text-slate-500">Valor: </span>
                         <span className="font-bold text-lg">{formatCurrency(financeiro?.valor_total || op.preco_servico)}</span>
                       </div>
                       {financeiro?.data_vencimento && (
                         <div>
-                          <span className="text-xs text-gray-500 dark:text-neutral-500">Vencimento: </span>
-                          <span className="text-gray-900 dark:text-neutral-100">{formatDate(financeiro.data_vencimento)}</span>
+                          <span className="text-xs text-gray-500 dark:text-slate-500">Vencimento: </span>
+                          <span className="text-gray-900 dark:text-slate-100">{formatDate(financeiro.data_vencimento)}</span>
                         </div>
                       )}
                       {financeiro && financeiro.valor_pago > 0 && financeiro.valor_pago < financeiro.valor_total && (
                         <div>
-                          <span className="text-xs text-gray-500 dark:text-neutral-500">Pago: </span>
+                          <span className="text-xs text-gray-500 dark:text-slate-500">Pago: </span>
                           <span className="font-semibold text-green-600">{formatCurrency(financeiro.valor_pago)}</span>
                         </div>
                       )}
@@ -2603,7 +2603,7 @@ function PrevisaoFaturamentoTab({ previsoes, onEmitirNota }: PrevisaoFaturamento
       {/* Lista */}
       {previsoes.length === 0 ? (
         <Card>
-          <p className="text-gray-600 dark:text-neutral-400 text-center py-8 text-lg">
+          <p className="text-gray-600 dark:text-slate-400 text-center py-8 text-lg">
             Nenhuma OP aguardando emissão de nota fiscal
           </p>
         </Card>
@@ -2617,25 +2617,25 @@ function PrevisaoFaturamentoTab({ previsoes, onEmitirNota }: PrevisaoFaturamento
               <div className="flex items-center justify-between">
                 <div className="flex-1 grid grid-cols-5 gap-4">
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">OP</p>
-                    <p className="text-gray-900 dark:text-neutral-100 font-bold">{prev.codigo}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">OP</p>
+                    <p className="text-gray-900 dark:text-slate-100 font-bold">{prev.codigo}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Cliente</p>
-                    <p className="text-gray-900 dark:text-neutral-100">{prev.cliente}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Cliente</p>
+                    <p className="text-gray-900 dark:text-slate-100">{prev.cliente}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Peça</p>
-                    <p className="text-gray-900 dark:text-neutral-100">{prev.nome_peca}</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Peça</p>
+                    <p className="text-gray-900 dark:text-slate-100">{prev.nome_peca}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Valor</p>
-                    <p className="text-gray-900 dark:text-neutral-100 font-bold text-lg">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Valor</p>
+                    <p className="text-gray-900 dark:text-slate-100 font-bold text-lg">
                       {formatCurrency(prev.preco_servico)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">Produção</p>
+                    <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">Produção</p>
                     <StatusBadge status={prev.status_producao || prev.status} type="producao" />
                   </div>
                 </div>
@@ -2823,8 +2823,8 @@ function DespesasTab({ contas, dashboard, onReload, userId }: DespesasTabProps) 
       case 'pago': return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
       case 'pendente': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
       case 'atrasado': return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
-      case 'cancelado': return 'bg-gray-100 text-gray-700 dark:bg-neutral-800 dark:text-neutral-300'
-      default: return 'bg-gray-100 text-gray-700 dark:bg-neutral-800 dark:text-neutral-300'
+      case 'cancelado': return 'bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300'
+      default: return 'bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300'
     }
   }
 
@@ -2924,13 +2924,13 @@ function DespesasTab({ contas, dashboard, onReload, userId }: DespesasTabProps) 
       {contasFiltradas.length === 0 ? (
         <div className="text-center py-12">
           <CreditCard className="mx-auto h-12 w-12 text-gray-400" />
-          <p className="mt-4 text-gray-500 dark:text-neutral-500">Nenhuma conta encontrada</p>
+          <p className="mt-4 text-gray-500 dark:text-slate-500">Nenhuma conta encontrada</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse bg-white dark:bg-neutral-900 rounded-lg overflow-hidden shadow">
+          <table className="w-full border-collapse bg-white dark:bg-slate-900 rounded-lg overflow-hidden shadow">
             <thead>
-              <tr className="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300">
+              <tr className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300">
                 <th className="text-left p-4 font-semibold">Descrição</th>
                 <th className="text-left p-4 font-semibold">Categoria</th>
                 <th className="text-left p-4 font-semibold">Vencimento</th>
@@ -2942,17 +2942,17 @@ function DespesasTab({ contas, dashboard, onReload, userId }: DespesasTabProps) 
             </thead>
             <tbody>
               {contasFiltradas.map((conta) => (
-                <tr key={conta.id} className="border-b border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800/50 text-gray-900 dark:text-neutral-100">
+                <tr key={conta.id} className="border-b border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50 text-gray-900 dark:text-slate-100">
                   <td className="p-4">
                     <div>
                       <p className="font-medium">{conta.descricao}</p>
                       {conta.fornecedor && (
-                        <p className="text-sm text-gray-500 dark:text-neutral-500">{conta.fornecedor}</p>
+                        <p className="text-sm text-gray-500 dark:text-slate-500">{conta.fornecedor}</p>
                       )}
                     </div>
                   </td>
                   <td className="p-4">
-                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300">
+                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300">
                       {CATEGORIAS_DESPESA.find(c => c.value === conta.categoria)?.label || conta.categoria}
                     </span>
                   </td>
@@ -2969,7 +2969,7 @@ function DespesasTab({ contas, dashboard, onReload, userId }: DespesasTabProps) 
                       {conta.status !== 'pago' && conta.status !== 'cancelado' && (
                         <button
                           onClick={() => abrirPagamento(conta)}
-                          className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-neutral-800 rounded-lg"
+                          className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-slate-800 rounded-lg"
                           title="Registrar Pagamento"
                         >
                           <DollarSign size={18} />
@@ -2977,14 +2977,14 @@ function DespesasTab({ contas, dashboard, onReload, userId }: DespesasTabProps) 
                       )}
                       <button
                         onClick={() => abrirEditarConta(conta)}
-                        className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-neutral-800 rounded-lg"
+                        className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg"
                         title="Editar"
                       >
                         <Edit size={18} />
                       </button>
                       <button
                         onClick={() => handleExcluir(conta)}
-                        className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-neutral-800 rounded-lg"
+                        className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-slate-800 rounded-lg"
                         title="Excluir"
                       >
                         <Trash2 size={18} />
@@ -3077,8 +3077,8 @@ function DespesasTab({ contas, dashboard, onReload, userId }: DespesasTabProps) 
           <form onSubmit={handlePagar} className="space-y-4">
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="font-semibold">{selectedConta.descricao}</p>
-              <p className="text-sm text-gray-600 dark:text-neutral-400">Valor Total: {formatCurrency(selectedConta.valor)}</p>
-              <p className="text-sm text-gray-600 dark:text-neutral-400">Já Pago: {formatCurrency(selectedConta.valor_pago || 0)}</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Valor Total: {formatCurrency(selectedConta.valor)}</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Já Pago: {formatCurrency(selectedConta.valor_pago || 0)}</p>
               <p className="text-sm font-semibold text-blue-600">
                 Restante: {formatCurrency(selectedConta.valor - (selectedConta.valor_pago || 0))}
               </p>
@@ -3202,7 +3202,7 @@ function RelatoriosTab({ ops, financeiros, contasReceber, dashboardData }: Relat
             <Card key={report.id} className="cursor-pointer hover:shadow-lg hover:border-blue-500 transition-all" onClick={() => setSelectedReport(report.id as ReportType)}>
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-blue-100 rounded-lg"><report.icon size={28} className="text-blue-600" /></div>
-                <div><h3 className="font-bold text-lg text-gray-900 dark:text-neutral-100">{report.label}</h3><p className="text-gray-600 dark:text-neutral-400 text-sm mt-1">{report.description}</p></div>
+                <div><h3 className="font-bold text-lg text-gray-900 dark:text-slate-100">{report.label}</h3><p className="text-gray-600 dark:text-slate-400 text-sm mt-1">{report.description}</p></div>
               </div>
             </Card>
           ))}
@@ -3221,7 +3221,7 @@ function RelatoriosTab({ ops, financeiros, contasReceber, dashboardData }: Relat
                 <h3 className="font-bold text-xl mb-4">Selecione a OP</h3>
                 <div className="flex gap-4 items-end">
                   <div className="flex-1">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-neutral-300 mb-2">Ordem de Produção</label>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Ordem de Produção</label>
                     <select value={selectedOPId} onChange={(e) => setSelectedOPId(e.target.value)} className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg">
                       <option value="">Selecione...</option>
                       {ops.map((op) => <option key={op.id} value={op.id}>{op.codigo} - {op.cliente} - {op.nome_peca}</option>)}
@@ -3254,7 +3254,7 @@ function RelatoriosTab({ ops, financeiros, contasReceber, dashboardData }: Relat
                 <h3 className="font-bold text-xl mb-4">Histórico do Cliente</h3>
                 <div className="flex gap-4 items-end">
                   <div className="flex-1">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-neutral-300 mb-2">Cliente</label>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Cliente</label>
                     <select value={selectedCliente} onChange={(e) => setSelectedCliente(e.target.value)} className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg">
                       <option value="">Selecione...</option>
                       {clientes.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -3272,8 +3272,8 @@ function RelatoriosTab({ ops, financeiros, contasReceber, dashboardData }: Relat
               <Card className="no-print">
                 <h3 className="font-bold text-xl mb-4">Produção por Período</h3>
                 <div className="flex gap-4 items-end">
-                  <div><label className="block text-sm font-semibold text-gray-700 dark:text-neutral-300 mb-2">Início</label><input type="date" value={periodoInicio} onChange={(e) => setPeriodoInicio(e.target.value)} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-lg" /></div>
-                  <div><label className="block text-sm font-semibold text-gray-700 dark:text-neutral-300 mb-2">Fim</label><input type="date" value={periodoFim} onChange={(e) => setPeriodoFim(e.target.value)} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-lg" /></div>
+                  <div><label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Início</label><input type="date" value={periodoInicio} onChange={(e) => setPeriodoInicio(e.target.value)} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-lg" /></div>
+                  <div><label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Fim</label><input type="date" value={periodoFim} onChange={(e) => setPeriodoFim(e.target.value)} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-lg" /></div>
                   <Button onClick={handlePrint} size="lg"><Printer size={20} className="mr-2" />Imprimir</Button>
                 </div>
               </Card>
@@ -3287,7 +3287,7 @@ function RelatoriosTab({ ops, financeiros, contasReceber, dashboardData }: Relat
                 <h3 className="font-bold text-xl mb-4">OPs por Status</h3>
                 <div className="flex gap-4 items-end">
                   <div className="flex-1">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-neutral-300 mb-2">Status</label>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Status</label>
                     <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)} className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg">
                       <option value="todos">Todos</option>
                       <option value="criada">Criada</option>
@@ -3319,14 +3319,14 @@ function PrintHeader({ title, subtitle }: { title: string; subtitle?: string }) 
     <div className="text-center border-b-2 border-gray-800 pb-4 mb-6">
       <h1 className="text-2xl font-bold">RJ USINAGEM</h1>
       <h2 className="text-xl font-semibold mt-2">{title}</h2>
-      {subtitle && <p className="text-gray-600 dark:text-neutral-400 mt-1">{subtitle}</p>}
-      <p className="text-sm text-gray-500 dark:text-neutral-500 mt-2">Emitido: {new Date().toLocaleDateString('pt-BR')} {new Date().toLocaleTimeString('pt-BR')}</p>
+      {subtitle && <p className="text-gray-600 dark:text-slate-400 mt-1">{subtitle}</p>}
+      <p className="text-sm text-gray-500 dark:text-slate-500 mt-2">Emitido: {new Date().toLocaleDateString('pt-BR')} {new Date().toLocaleTimeString('pt-BR')}</p>
     </div>
   )
 }
 
 function PrintFooter() {
-  return <div className="mt-8 pt-4 border-t text-center text-sm text-gray-500 dark:text-neutral-500">RJ Usinagem - Sistema de Gestão</div>
+  return <div className="mt-8 pt-4 border-t text-center text-sm text-gray-500 dark:text-slate-500">RJ Usinagem - Sistema de Gestão</div>
 }
 
 function FichaOPPrint({ op }: { op: OrdemProducao }) {
@@ -3335,22 +3335,22 @@ function FichaOPPrint({ op }: { op: OrdemProducao }) {
       <PrintHeader title="FICHA DE ORDEM DE PRODUÇÃO" />
       <div className="border-2 border-gray-800 p-4 mb-4">
         <div className="flex justify-between items-center border-b pb-3 mb-4">
-          <div><span className="text-sm text-gray-600 dark:text-neutral-400">CÓDIGO</span><p className="text-3xl font-bold">{op.codigo}</p></div>
-          <div className="text-right"><span className="text-sm text-gray-600 dark:text-neutral-400">TIPO</span><p className="text-xl font-semibold uppercase">{op.tipo}</p></div>
-          <div className="text-right"><span className="text-sm text-gray-600 dark:text-neutral-400">STATUS</span><p className="text-xl font-semibold uppercase">{op.status.replace('_', ' ')}</p></div>
+          <div><span className="text-sm text-gray-600 dark:text-slate-400">CÓDIGO</span><p className="text-3xl font-bold">{op.codigo}</p></div>
+          <div className="text-right"><span className="text-sm text-gray-600 dark:text-slate-400">TIPO</span><p className="text-xl font-semibold uppercase">{op.tipo}</p></div>
+          <div className="text-right"><span className="text-sm text-gray-600 dark:text-slate-400">STATUS</span><p className="text-xl font-semibold uppercase">{op.status.replace('_', ' ')}</p></div>
         </div>
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-3">
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">CLIENTE</span><p className="text-lg font-semibold">{op.cliente}</p></div>
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">PEÇA</span><p className="text-lg font-semibold">{op.nome_peca}</p></div>
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">QUANTIDADE</span><p className="text-lg font-semibold">{op.quantidade_total} peças</p></div>
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">VALOR</span><p className="text-lg font-semibold">{formatCurrency(op.preco_servico)}</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">CLIENTE</span><p className="text-lg font-semibold">{op.cliente}</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">PEÇA</span><p className="text-lg font-semibold">{op.nome_peca}</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">QUANTIDADE</span><p className="text-lg font-semibold">{op.quantidade_total} peças</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">VALOR</span><p className="text-lg font-semibold">{formatCurrency(op.preco_servico)}</p></div>
           </div>
           <div className="space-y-3">
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">INÍCIO</span><p className="text-lg font-semibold">{formatDate(op.data_inicio)}</p></div>
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">TÉRMINO</span><p className="text-lg font-semibold">{formatDate(op.data_termino)}</p></div>
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">MÁQUINA</span><p className="text-lg font-semibold">{op.maquina_utilizada || '-'}</p></div>
-            <div><span className="text-xs text-gray-600 dark:text-neutral-400">OPERADOR</span><p className="text-lg font-semibold">{op.operador_responsavel || '-'}</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">INÍCIO</span><p className="text-lg font-semibold">{formatDate(op.data_inicio)}</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">TÉRMINO</span><p className="text-lg font-semibold">{formatDate(op.data_termino)}</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">MÁQUINA</span><p className="text-lg font-semibold">{op.maquina_utilizada || '-'}</p></div>
+            <div><span className="text-xs text-gray-600 dark:text-slate-400">OPERADOR</span><p className="text-lg font-semibold">{op.operador_responsavel || '-'}</p></div>
           </div>
         </div>
       </div>
@@ -3361,11 +3361,11 @@ function FichaOPPrint({ op }: { op: OrdemProducao }) {
       <div className="border-2 border-gray-800 p-4 mb-4">
         <h3 className="font-bold border-b pb-2 mb-3">MATERIAL</h3>
         <div className="grid grid-cols-3 gap-4 text-sm">
-          <div><span className="text-gray-600 dark:text-neutral-400">Material:</span> {op.material || '-'}</div>
-          <div><span className="text-gray-600 dark:text-neutral-400">Código:</span> {op.codigo_descricao_material || '-'}</div>
-          <div><span className="text-gray-600 dark:text-neutral-400">Qtd:</span> {op.quantidade_material || '-'}</div>
-          <div><span className="text-gray-600 dark:text-neutral-400">Lote:</span> {op.lote || '-'}</div>
-          <div><span className="text-gray-600 dark:text-neutral-400">Fornecedor:</span> {op.fornecedor || '-'}</div>
+          <div><span className="text-gray-600 dark:text-slate-400">Material:</span> {op.material || '-'}</div>
+          <div><span className="text-gray-600 dark:text-slate-400">Código:</span> {op.codigo_descricao_material || '-'}</div>
+          <div><span className="text-gray-600 dark:text-slate-400">Qtd:</span> {op.quantidade_material || '-'}</div>
+          <div><span className="text-gray-600 dark:text-slate-400">Lote:</span> {op.lote || '-'}</div>
+          <div><span className="text-gray-600 dark:text-slate-400">Fornecedor:</span> {op.fornecedor || '-'}</div>
         </div>
       </div>
       <div className="border-2 border-gray-800 p-4">
@@ -3385,9 +3385,9 @@ function ResumoFinanceiroPrint({ dashboardData }: { dashboardData: DashboardFina
     <Card>
       <PrintHeader title="RESUMO FINANCEIRO" subtitle={new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })} />
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="border-2 border-gray-800 p-4 text-center"><p className="text-sm text-gray-600 dark:text-neutral-400">FATURADO</p><p className="text-2xl font-bold text-green-700">{formatCurrency(dashboardData?.faturado_mes || 0)}</p></div>
-        <div className="border-2 border-gray-800 p-4 text-center"><p className="text-sm text-gray-600 dark:text-neutral-400">RECEBIDO</p><p className="text-2xl font-bold text-blue-700">{formatCurrency(dashboardData?.recebido_mes || 0)}</p></div>
-        <div className="border-2 border-gray-800 p-4 text-center"><p className="text-sm text-gray-600 dark:text-neutral-400">EM ABERTO</p><p className="text-2xl font-bold text-orange-700">{formatCurrency(dashboardData?.total_em_aberto || 0)}</p></div>
+        <div className="border-2 border-gray-800 p-4 text-center"><p className="text-sm text-gray-600 dark:text-slate-400">FATURADO</p><p className="text-2xl font-bold text-green-700">{formatCurrency(dashboardData?.faturado_mes || 0)}</p></div>
+        <div className="border-2 border-gray-800 p-4 text-center"><p className="text-sm text-gray-600 dark:text-slate-400">RECEBIDO</p><p className="text-2xl font-bold text-blue-700">{formatCurrency(dashboardData?.recebido_mes || 0)}</p></div>
+        <div className="border-2 border-gray-800 p-4 text-center"><p className="text-sm text-gray-600 dark:text-slate-400">EM ABERTO</p><p className="text-2xl font-bold text-orange-700">{formatCurrency(dashboardData?.total_em_aberto || 0)}</p></div>
       </div>
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="border p-3 text-center"><p className="text-sm">Atrasados</p><p className="text-xl font-bold text-red-600">{dashboardData?.ops_atrasadas || 0}</p></div>

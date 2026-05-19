@@ -17,5 +17,18 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'supabase': ['@supabase/supabase-js'],
+          'pdf': ['jspdf', 'jspdf-autotable'],
+          'docx': ['docx', 'file-saver'],
+          'date': ['date-fns'],
+          'icons': ['lucide-react'],
+        },
+      },
+    },
   },
 })

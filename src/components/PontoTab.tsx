@@ -549,7 +549,7 @@ export function PontoTab({ userId }: PontoTabProps) {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 dark:text-neutral-400 text-lg">Carregando...</p>
+        <p className="text-gray-600 dark:text-slate-400 text-lg">Carregando...</p>
       </div>
     )
   }
@@ -596,10 +596,10 @@ export function PontoTab({ userId }: PontoTabProps) {
                   placeholder="Buscar funcionário..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
-              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-neutral-400">
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
                 <input
                   type="checkbox"
                   checked={showInativos}
@@ -625,9 +625,9 @@ export function PontoTab({ userId }: PontoTabProps) {
               <Card key={funcionario.id} className={!funcionario.ativo ? 'opacity-60' : ''}>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-neutral-100">{funcionario.nome}</h3>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">{funcionario.nome}</h3>
                     {funcionario.cargo && (
-                      <p className="text-gray-500 dark:text-neutral-500">{funcionario.cargo}</p>
+                      <p className="text-gray-500 dark:text-slate-500">{funcionario.cargo}</p>
                     )}
                     {funcionario.valor_hora > 0 && (
                       <p className="text-blue-600 font-semibold mt-1">R$ {funcionario.valor_hora.toFixed(2)}/hora</p>
@@ -643,14 +643,14 @@ export function PontoTab({ userId }: PontoTabProps) {
                   <div className="flex gap-1">
                     <button
                       onClick={() => abrirLinkModal(funcionario)}
-                      className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-neutral-800 rounded-lg"
+                      className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg"
                       title="Ver link do ponto"
                     >
                       <Copy size={18} />
                     </button>
                     <button
                       onClick={() => abrirEditarFuncionario(funcionario)}
-                      className="p-2 text-gray-600 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-lg"
+                      className="p-2 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
                       title="Editar"
                     >
                       <Edit size={18} />
@@ -710,7 +710,7 @@ export function PontoTab({ userId }: PontoTabProps) {
           {funcionariosFiltrados.length === 0 && (
             <div className="text-center py-12">
               <Users className="mx-auto h-12 w-12 text-gray-400" />
-              <p className="mt-4 text-gray-500 dark:text-neutral-500">Nenhum funcionário encontrado</p>
+              <p className="mt-4 text-gray-500 dark:text-slate-500">Nenhum funcionário encontrado</p>
             </div>
           )}
         </div>
@@ -722,11 +722,11 @@ export function PontoTab({ userId }: PontoTabProps) {
           {/* Filtros */}
           <div className="flex flex-wrap gap-4 items-end">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Funcionário</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Funcionário</label>
               <select
                 value={filtroFuncionario}
                 onChange={(e) => setFiltroFuncionario(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">Todos</option>
                 {funcionarios.map((f) => (
@@ -735,21 +735,21 @@ export function PontoTab({ userId }: PontoTabProps) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Data Início</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Data Início</label>
               <input
                 type="date"
                 value={filtroDataInicio}
                 onChange={(e) => setFiltroDataInicio(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Data Fim</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Data Fim</label>
               <input
                 type="date"
                 value={filtroDataFim}
                 onChange={(e) => setFiltroDataFim(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <Button onClick={loadRegistros} variant="secondary">
@@ -762,7 +762,7 @@ export function PontoTab({ userId }: PontoTabProps) {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300">
+                <tr className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300">
                   <th className="text-left p-3 font-semibold">Funcionário</th>
                   <th className="text-left p-3 font-semibold">Data</th>
                   <th className="text-left p-3 font-semibold">Entrada</th>
@@ -774,12 +774,12 @@ export function PontoTab({ userId }: PontoTabProps) {
               </thead>
               <tbody>
                 {registros.map((reg) => (
-                  <tr key={reg.id} className="border-b hover:bg-gray-50 dark:hover:bg-neutral-800/50">
+                  <tr key={reg.id} className="border-b hover:bg-gray-50 dark:hover:bg-slate-800/50">
                     <td className="p-3">
                       <div>
                         <p className="font-medium">{reg.funcionario_nome}</p>
                         {reg.funcionario_cargo && (
-                          <p className="text-sm text-gray-500 dark:text-neutral-500">{reg.funcionario_cargo}</p>
+                          <p className="text-sm text-gray-500 dark:text-slate-500">{reg.funcionario_cargo}</p>
                         )}
                       </div>
                     </td>
@@ -798,7 +798,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                         {reg.status === 'fechado' ? 'Fechado' : reg.status === 'aberto' ? 'Aberto' : 'Ajustado'}
                       </span>
                     </td>
-                    <td className="p-3 text-sm text-gray-500 dark:text-neutral-500">{reg.origem}</td>
+                    <td className="p-3 text-sm text-gray-500 dark:text-slate-500">{reg.origem}</td>
                   </tr>
                 ))}
               </tbody>
@@ -808,7 +808,7 @@ export function PontoTab({ userId }: PontoTabProps) {
           {registros.length === 0 && (
             <div className="text-center py-12">
               <Clock className="mx-auto h-12 w-12 text-gray-400" />
-              <p className="mt-4 text-gray-500 dark:text-neutral-500">Nenhum registro encontrado</p>
+              <p className="mt-4 text-gray-500 dark:text-slate-500">Nenhum registro encontrado</p>
             </div>
           )}
         </div>
@@ -818,17 +818,17 @@ export function PontoTab({ userId }: PontoTabProps) {
       {subTab === 'resumo' && (
         <div className="space-y-6">
           {/* Filtros de Período */}
-          <Card className="bg-blue-50 border-blue-200 dark:bg-neutral-900 dark:border-neutral-800">
+          <Card className="bg-blue-50 border-blue-200 dark:bg-slate-900 dark:border-slate-800">
             <div className="flex flex-wrap gap-4 items-end">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Período</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Período</label>
                 <div className="flex gap-1">
                   <button
                     onClick={() => handlePeriodoChange('dia')}
                     className={`px-3 py-2 text-sm rounded-lg ${
                       periodoTipo === 'dia'
                         ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-neutral-900 border border-gray-300 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-800'
+                        : 'bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     Hoje
@@ -838,7 +838,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                     className={`px-3 py-2 text-sm rounded-lg ${
                       periodoTipo === 'semana'
                         ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-neutral-900 border border-gray-300 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-800'
+                        : 'bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     Semana
@@ -848,7 +848,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                     className={`px-3 py-2 text-sm rounded-lg ${
                       periodoTipo === 'mes'
                         ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-neutral-900 border border-gray-300 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-800'
+                        : 'bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     Mês
@@ -858,7 +858,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                     className={`px-3 py-2 text-sm rounded-lg ${
                       periodoTipo === 'custom'
                         ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-neutral-900 border border-gray-300 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-800'
+                        : 'bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     Personalizado
@@ -866,7 +866,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">De</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">De</label>
                 <input
                   type="date"
                   value={periodoDataInicio}
@@ -874,11 +874,11 @@ export function PontoTab({ userId }: PontoTabProps) {
                     setPeriodoDataInicio(e.target.value)
                     setPeriodoTipo('custom')
                   }}
-                  className="px-3 py-2 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="px-3 py-2 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Até</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Até</label>
                 <input
                   type="date"
                   value={periodoDataFim}
@@ -886,15 +886,15 @@ export function PontoTab({ userId }: PontoTabProps) {
                     setPeriodoDataFim(e.target.value)
                     setPeriodoTipo('custom')
                   }}
-                  className="px-3 py-2 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="px-3 py-2 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Funcionário</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Funcionário</label>
                 <select
                   value={periodoFuncionario}
                   onChange={(e) => setPeriodoFuncionario(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="px-3 py-2 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">Todos</option>
                   {funcionarios.map((f) => (
@@ -919,7 +919,7 @@ export function PontoTab({ userId }: PontoTabProps) {
 
           {/* Relatório de Horas por Período */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-neutral-100 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-4 flex items-center gap-2">
               <FileText size={20} />
               Relatório de Horas - {periodoDataInicio && periodoDataFim
                 ? `${new Date(periodoDataInicio + 'T12:00:00').toLocaleDateString('pt-BR')} a ${new Date(periodoDataFim + 'T12:00:00').toLocaleDateString('pt-BR')}`
@@ -928,9 +928,9 @@ export function PontoTab({ userId }: PontoTabProps) {
 
             {relatorioHoras.length > 0 ? (
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse bg-white dark:bg-neutral-900 rounded-lg overflow-hidden shadow">
+                <table className="w-full border-collapse bg-white dark:bg-slate-900 rounded-lg overflow-hidden shadow">
                   <thead>
-                    <tr className="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300">
+                    <tr className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300">
                       <th className="text-left p-4 font-semibold">Funcionário</th>
                       <th className="text-center p-4 font-semibold">Dias Trabalhados</th>
                       <th className="text-center p-4 font-semibold">Total de Horas</th>
@@ -939,18 +939,18 @@ export function PontoTab({ userId }: PontoTabProps) {
                   </thead>
                   <tbody>
                     {relatorioHoras.map((r) => (
-                      <tr key={r.funcionario_id} className="border-b border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800/50">
+                      <tr key={r.funcionario_id} className="border-b border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50">
                         <td className="p-4">
                           <div>
-                            <p className="font-medium text-gray-900 dark:text-neutral-100">{r.funcionario_nome}</p>
+                            <p className="font-medium text-gray-900 dark:text-slate-100">{r.funcionario_nome}</p>
                             {r.funcionario_cargo && (
-                              <p className="text-sm text-gray-500 dark:text-neutral-500">{r.funcionario_cargo}</p>
+                              <p className="text-sm text-gray-500 dark:text-slate-500">{r.funcionario_cargo}</p>
                             )}
                           </div>
                         </td>
                         <td className="p-4 text-center">
                           <span className="font-semibold">{r.total_dias}</span>
-                          <span className="text-gray-500 dark:text-neutral-500 text-sm ml-1">dias</span>
+                          <span className="text-gray-500 dark:text-slate-500 text-sm ml-1">dias</span>
                         </td>
                         <td className="p-4 text-center">
                           <span className="font-bold text-blue-600 text-lg">
@@ -969,7 +969,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                             </button>
                             <button
                               onClick={() => handleBaixarRelatorioFuncionarioDOCX(r.funcionario_id)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-md bg-gray-700 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-md bg-gray-700 text-white hover:bg-gray-800 dark:bg-slate-700 dark:hover:bg-slate-600"
                               title="Baixar folha detalhada em DOCX"
                             >
                               <Download size={14} />
@@ -980,10 +980,10 @@ export function PontoTab({ userId }: PontoTabProps) {
                       </tr>
                     ))}
                   </tbody>
-                  <tfoot className="bg-blue-50 dark:bg-neutral-800 border-t border-gray-200 dark:border-neutral-700">
+                  <tfoot className="bg-blue-50 dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700">
                     <tr>
-                      <td className="p-4 font-semibold text-gray-900 dark:text-neutral-100">TOTAL GERAL</td>
-                      <td className="p-4 text-center font-semibold text-gray-900 dark:text-neutral-100">
+                      <td className="p-4 font-semibold text-gray-900 dark:text-slate-100">TOTAL GERAL</td>
+                      <td className="p-4 text-center font-semibold text-gray-900 dark:text-slate-100">
                         {relatorioHoras.reduce((acc, r) => acc + r.total_dias, 0)} dias
                       </td>
                       <td className="p-4 text-center font-semibold text-blue-700 dark:text-blue-400 text-base">
@@ -995,16 +995,16 @@ export function PontoTab({ userId }: PontoTabProps) {
                 </table>
               </div>
             ) : (
-              <div className="text-center py-12 bg-white dark:bg-neutral-900 rounded-lg shadow">
+              <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-lg shadow">
                 <Clock className="mx-auto h-12 w-12 text-gray-400" />
-                <p className="mt-4 text-gray-500 dark:text-neutral-500">Nenhum registro encontrado no período selecionado</p>
+                <p className="mt-4 text-gray-500 dark:text-slate-500">Nenhum registro encontrado no período selecionado</p>
               </div>
             )}
           </div>
 
           {/* Resumo Geral (histórico) */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-neutral-100 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-4 flex items-center gap-2">
               <Calendar size={20} />
               Histórico Geral (todos os registros)
             </h3>
@@ -1013,8 +1013,8 @@ export function PontoTab({ userId }: PontoTabProps) {
                 <Card key={r.funcionario_id}>
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-neutral-100">{r.nome}</h3>
-                      {r.cargo && <p className="text-gray-500 dark:text-neutral-500">{r.cargo}</p>}
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">{r.nome}</h3>
+                      {r.cargo && <p className="text-gray-500 dark:text-slate-500">{r.cargo}</p>}
                     </div>
                     <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
                       r.ativo
@@ -1026,11 +1026,11 @@ export function PontoTab({ userId }: PontoTabProps) {
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-neutral-400">Total de registros:</span>
+                      <span className="text-gray-600 dark:text-slate-400">Total de registros:</span>
                       <span className="font-bold">{r.total_registros}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-neutral-400">Horas trabalhadas:</span>
+                      <span className="text-gray-600 dark:text-slate-400">Horas trabalhadas:</span>
                       <span className="font-bold text-blue-600">
                         {formatMinutesToHours(r.total_minutos_trabalhados)}
                       </span>
@@ -1042,7 +1042,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                       </div>
                     )}
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500 dark:text-neutral-500">Último ponto:</span>
+                      <span className="text-gray-500 dark:text-slate-500">Último ponto:</span>
                       <span>{formatDate(r.ultima_data_ponto)}</span>
                     </div>
                   </div>
@@ -1053,7 +1053,7 @@ export function PontoTab({ userId }: PontoTabProps) {
             {resumo.length === 0 && (
               <div className="text-center py-12">
                 <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                <p className="mt-4 text-gray-500 dark:text-neutral-500">Nenhum dado disponível</p>
+                <p className="mt-4 text-gray-500 dark:text-slate-500">Nenhum dado disponível</p>
               </div>
             )}
           </div>
@@ -1109,20 +1109,20 @@ export function PontoTab({ userId }: PontoTabProps) {
         {selectedFuncionario && (
           <div className="space-y-4">
             <div className="text-center">
-              <p className="text-lg font-bold text-gray-900 dark:text-neutral-100">{selectedFuncionario.nome}</p>
+              <p className="text-lg font-bold text-gray-900 dark:text-slate-100">{selectedFuncionario.nome}</p>
               {selectedFuncionario.cargo && (
-                <p className="text-gray-500 dark:text-neutral-500">{selectedFuncionario.cargo}</p>
+                <p className="text-gray-500 dark:text-slate-500">{selectedFuncionario.cargo}</p>
               )}
             </div>
 
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600 dark:text-neutral-400 mb-2">Link para bater ponto:</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Link para bater ponto:</p>
               <div className="flex gap-2">
                 <input
                   type="text"
                   readOnly
                   value={getLinkPonto(selectedFuncionario.ponto_token)}
-                  className="flex-1 px-3 py-2 bg-white dark:bg-neutral-900 border rounded-lg text-sm"
+                  className="flex-1 px-3 py-2 bg-white dark:bg-slate-900 border rounded-lg text-sm"
                 />
                 <Button onClick={copiarLink}>
                   {copiedLink ? (
@@ -1207,44 +1207,44 @@ export function PontoTab({ userId }: PontoTabProps) {
         {pagamentoPreview && (
           <div className="space-y-4">
             <div>
-              <p className="text-base font-semibold text-gray-900 dark:text-neutral-100">
+              <p className="text-base font-semibold text-gray-900 dark:text-slate-100">
                 {pagamentoPreview.funcionario.nome}
               </p>
               {pagamentoPreview.funcionario.cargo && (
-                <p className="text-xs text-gray-500 dark:text-neutral-500">
+                <p className="text-xs text-gray-500 dark:text-slate-500">
                   {pagamentoPreview.funcionario.cargo}
                 </p>
               )}
             </div>
 
-            <div className="rounded-md border border-gray-200 dark:border-neutral-800 divide-y divide-gray-200 dark:divide-neutral-800">
+            <div className="rounded-md border border-gray-200 dark:border-slate-800 divide-y divide-gray-200 dark:divide-slate-800">
               <div className="flex items-center justify-between px-3 py-2 text-sm">
-                <span className="text-gray-500 dark:text-neutral-400">Período</span>
-                <span className="font-medium text-gray-900 dark:text-neutral-100">
+                <span className="text-gray-500 dark:text-slate-400">Período</span>
+                <span className="font-medium text-gray-900 dark:text-slate-100">
                   {new Date(pagamentoPreview.desde + 'T12:00:00').toLocaleDateString('pt-BR')} → hoje
                 </span>
               </div>
               <div className="flex items-center justify-between px-3 py-2 text-sm">
-                <span className="text-gray-500 dark:text-neutral-400">Horas trabalhadas</span>
-                <span className="font-medium text-gray-900 dark:text-neutral-100 tabular-nums">
+                <span className="text-gray-500 dark:text-slate-400">Horas trabalhadas</span>
+                <span className="font-medium text-gray-900 dark:text-slate-100 tabular-nums">
                   {pagamentoPreview.totalHoras.toFixed(1)}h
                 </span>
               </div>
               <div className="flex items-center justify-between px-3 py-2 text-sm">
-                <span className="text-gray-500 dark:text-neutral-400">Valor/hora</span>
-                <span className="font-medium text-gray-900 dark:text-neutral-100 tabular-nums">
+                <span className="text-gray-500 dark:text-slate-400">Valor/hora</span>
+                <span className="font-medium text-gray-900 dark:text-slate-100 tabular-nums">
                   R$ {pagamentoPreview.valorHora.toFixed(2).replace('.', ',')}
                 </span>
               </div>
-              <div className="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-neutral-800/50">
-                <span className="text-sm font-medium text-gray-700 dark:text-neutral-300">Total a pagar</span>
+              <div className="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-slate-800/50">
+                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Total a pagar</span>
                 <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 tabular-nums">
                   R$ {pagamentoPreview.valorTotal.toFixed(2).replace('.', ',')}
                 </span>
               </div>
             </div>
 
-            <p className="text-xs text-gray-500 dark:text-neutral-400">
+            <p className="text-xs text-gray-500 dark:text-slate-400">
               Uma conta a pagar será criada e o funcionário será marcado como pago até hoje.
             </p>
 
@@ -1288,21 +1288,21 @@ export function PontoTab({ userId }: PontoTabProps) {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-neutral-400 mb-1">Data início</label>
+                <label className="block text-xs font-medium text-gray-600 dark:text-slate-400 mb-1">Data início</label>
                 <input
                   type="date"
                   value={folhaDataInicio}
                   onChange={(e) => setFolhaDataInicio(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-neutral-400 mb-1">Data fim</label>
+                <label className="block text-xs font-medium text-gray-600 dark:text-slate-400 mb-1">Data fim</label>
                 <input
                   type="date"
                   value={folhaDataFim}
                   onChange={(e) => setFolhaDataFim(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -1315,7 +1315,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                   setFolhaDataInicio(new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().split('T')[0])
                   setFolhaDataFim(hoje.toISOString().split('T')[0])
                 }}
-                className="px-3 py-1 text-xs rounded-md border border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
+                className="px-3 py-1 text-xs rounded-md border border-gray-300 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800"
               >
                 Mês atual
               </button>
@@ -1328,17 +1328,17 @@ export function PontoTab({ userId }: PontoTabProps) {
                   setFolhaDataInicio(ultimoMes.toISOString().split('T')[0])
                   setFolhaDataFim(fimUltimoMes.toISOString().split('T')[0])
                 }}
-                className="px-3 py-1 text-xs rounded-md border border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
+                className="px-3 py-1 text-xs rounded-md border border-gray-300 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800"
               >
                 Mês anterior
               </button>
             </div>
 
-            <p className="text-xs text-gray-500 dark:text-neutral-400">
+            <p className="text-xs text-gray-500 dark:text-slate-400">
               A folha inclui apenas os dias com ponto <strong>fechado</strong> no período.
             </p>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-200 dark:border-neutral-800">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-200 dark:border-slate-800">
               <Button
                 variant="outline"
                 size="sm"
@@ -1390,7 +1390,7 @@ export function PontoTab({ userId }: PontoTabProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">Tipo de Ajuste</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Tipo de Ajuste</label>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -1398,7 +1398,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                 className={`flex-1 py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 ${
                   ajusteForm.tipo === 'adicionar'
                     ? 'bg-green-500 text-white'
-                    : 'bg-gray-100 text-gray-700 dark:bg-neutral-800 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-700'
+                    : 'bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
                 }`}
               >
                 <PlusCircle size={20} />
@@ -1410,7 +1410,7 @@ export function PontoTab({ userId }: PontoTabProps) {
                 className={`flex-1 py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 ${
                   ajusteForm.tipo === 'remover'
                     ? 'bg-red-500 text-white'
-                    : 'bg-gray-100 text-gray-700 dark:bg-neutral-800 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-700'
+                    : 'bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
                 }`}
               >
                 <MinusCircle size={20} />
@@ -1421,37 +1421,37 @@ export function PontoTab({ userId }: PontoTabProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Horas</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Horas</label>
               <input
                 type="number"
                 min="0"
                 max="24"
                 value={ajusteForm.horas}
                 onChange={(e) => setAjusteForm({ ...ajusteForm, horas: e.target.value })}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 placeholder="0"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Minutos</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Minutos</label>
               <input
                 type="number"
                 min="0"
                 max="59"
                 value={ajusteForm.minutos}
                 onChange={(e) => setAjusteForm({ ...ajusteForm, minutos: e.target.value })}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 placeholder="0"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Motivo do Ajuste</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Motivo do Ajuste</label>
             <textarea
               value={ajusteForm.observacao}
               onChange={(e) => setAjusteForm({ ...ajusteForm, observacao: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               rows={2}
               placeholder="Ex: Esqueceu de bater ponto na saída"
             />

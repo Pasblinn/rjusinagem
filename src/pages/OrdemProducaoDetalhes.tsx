@@ -301,7 +301,7 @@ export function OrdemProducaoDetalhes() {
     return (
       <Layout>
         <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-neutral-400 text-lg">Carregando...</p>
+          <p className="text-gray-600 dark:text-slate-400 text-lg">Carregando...</p>
         </div>
       </Layout>
     )
@@ -311,7 +311,7 @@ export function OrdemProducaoDetalhes() {
     return (
       <Layout>
         <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-neutral-400 text-lg">OP não encontrada</p>
+          <p className="text-gray-600 dark:text-slate-400 text-lg">OP não encontrada</p>
         </div>
       </Layout>
     )
@@ -329,8 +329,8 @@ export function OrdemProducaoDetalhes() {
               Voltar
             </Button>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">{op.codigo}</h2>
-              <p className="text-gray-600 dark:text-neutral-400 mt-1">{op.cliente} - {op.nome_peca}</p>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{op.codigo}</h2>
+              <p className="text-gray-600 dark:text-slate-400 mt-1">{op.cliente} - {op.nome_peca}</p>
             </div>
             <StatusBadge status={op.status_producao || op.status} type="producao" />
             <StatusBadge status={op.status_financeiro || 'pendente'} type="financeiro" />
@@ -411,21 +411,21 @@ export function OrdemProducaoDetalhes() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <div className="text-center">
-              <p className="text-gray-600 dark:text-neutral-400 text-sm font-semibold mb-1">Quantidade Total</p>
+              <p className="text-gray-600 dark:text-slate-400 text-sm font-semibold mb-1">Quantidade Total</p>
               <p className="text-4xl font-bold text-blue-600">{op.quantidade_total}</p>
-              {op.unidade && <p className="text-xs text-gray-500 dark:text-neutral-500">{op.unidade}</p>}
+              {op.unidade && <p className="text-xs text-gray-500 dark:text-slate-500">{op.unidade}</p>}
             </div>
           </Card>
           <Card>
             <div className="text-center">
-              <p className="text-gray-600 dark:text-neutral-400 text-sm font-semibold mb-1">Operações</p>
+              <p className="text-gray-600 dark:text-slate-400 text-sm font-semibold mb-1">Operações</p>
               <p className="text-4xl font-bold text-green-600">{totalOperacoes}</p>
-              <p className="text-xs text-gray-500 dark:text-neutral-500">registradas</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500">registradas</p>
             </div>
           </Card>
           <Card>
             <div className="text-center">
-              <p className="text-gray-600 dark:text-neutral-400 text-sm font-semibold mb-1">Defeitos</p>
+              <p className="text-gray-600 dark:text-slate-400 text-sm font-semibold mb-1">Defeitos</p>
               <p className="text-4xl font-bold text-red-600">{totalDefeitos}</p>
             </div>
           </Card>
@@ -447,98 +447,98 @@ export function OrdemProducaoDetalhes() {
 
         {/* Card de todas as informações da OP */}
         <Card>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 mb-4">Informações da OP</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Informações da OP</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4">
             <div>
-              <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Tipo</p>
-              <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.tipo === 'encomenda' ? 'Encomenda' : 'Estoque'}</p>
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Tipo</p>
+              <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.tipo === 'encomenda' ? 'Encomenda' : 'Estoque'}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Data de Início</p>
-              <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{formatDateStr(op.data_inicio)}</p>
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Data de Início</p>
+              <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{formatDateStr(op.data_inicio)}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Data de Término</p>
-              <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{formatDateStr(op.data_termino)}</p>
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Data de Término</p>
+              <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{formatDateStr(op.data_termino)}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Cliente</p>
-              <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.cliente}</p>
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Cliente</p>
+              <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.cliente}</p>
             </div>
             {op.cnpj_cliente && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">CNPJ do Cliente</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.cnpj_cliente}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">CNPJ do Cliente</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.cnpj_cliente}</p>
               </div>
             )}
             <div>
-              <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Peça</p>
-              <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.nome_peca}</p>
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Peça</p>
+              <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.nome_peca}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Quantidade Total</p>
-              <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.quantidade_total} {op.unidade || 'unid.'}</p>
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Quantidade Total</p>
+              <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.quantidade_total} {op.unidade || 'unid.'}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Preço do Serviço</p>
-              <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Preço do Serviço</p>
+              <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">
                 {op.preco_servico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
               </p>
             </div>
             {op.preco_material != null && op.preco_material > 0 && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Preço do Material</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Preço do Material</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">
                   {op.preco_material.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                 </p>
               </div>
             )}
             {op.maquina_utilizada && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Máquina</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.maquina_utilizada}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Máquina</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.maquina_utilizada}</p>
               </div>
             )}
             {op.operador_responsavel && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Operador Responsável</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.operador_responsavel}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Operador Responsável</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.operador_responsavel}</p>
               </div>
             )}
             {op.material && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Material</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.material}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Material</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.material}</p>
               </div>
             )}
             {op.codigo_descricao_material && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Código / Descrição</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.codigo_descricao_material}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Código / Descrição</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.codigo_descricao_material}</p>
               </div>
             )}
             {op.quantidade_material != null && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Qtd. Material</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.quantidade_material}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Qtd. Material</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.quantidade_material}</p>
               </div>
             )}
             {op.lote && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Lote</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.lote}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Lote</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.lote}</p>
               </div>
             )}
             {op.fornecedor && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Fornecedor</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.fornecedor}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Fornecedor</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.fornecedor}</p>
               </div>
             )}
             {op.observacoes_material && (
               <div className="col-span-2 md:col-span-3">
-                <p className="text-sm font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide">Obs. Material</p>
-                <p className="text-gray-900 dark:text-neutral-100 font-medium mt-0.5">{op.observacoes_material}</p>
+                <p className="text-sm font-semibold text-gray-500 dark:text-slate-500 uppercase tracking-wide">Obs. Material</p>
+                <p className="text-gray-900 dark:text-slate-100 font-medium mt-0.5">{op.observacoes_material}</p>
               </div>
             )}
           </div>
@@ -547,7 +547,7 @@ export function OrdemProducaoDetalhes() {
         {/* Planta / Desenho da Peça */}
         {op.imagem_planta_url && (
           <Card>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 mb-4 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4 flex items-center gap-2">
               <ImageIcon size={20} className="text-blue-600" />
               Planta / Desenho da Peça
             </h3>
@@ -560,13 +560,13 @@ export function OrdemProducaoDetalhes() {
                 />
               </a>
             </div>
-            <p className="text-center text-sm text-gray-500 dark:text-neutral-500 mt-2">Clique na imagem para abrir em tamanho completo</p>
+            <p className="text-center text-sm text-gray-500 dark:text-slate-500 mt-2">Clique na imagem para abrir em tamanho completo</p>
           </Card>
         )}
 
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <Timer size={24} />
               Preparação da Máquina
             </h3>
@@ -589,7 +589,7 @@ export function OrdemProducaoDetalhes() {
               )}
             </div>
             {elapsedSeconds > 0 && !timerRunning && (
-              <span className="text-sm text-gray-500 dark:text-neutral-500">
+              <span className="text-sm text-gray-500 dark:text-slate-500">
                 Tempo acumulado
               </span>
             )}
@@ -604,7 +604,7 @@ export function OrdemProducaoDetalhes() {
 
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Produção Diária</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Produção Diária</h3>
             <Button onClick={() => setShowProducaoModal(true)}>
               <Plus size={20} className="inline mr-2" />
               Registrar Produção
@@ -612,7 +612,7 @@ export function OrdemProducaoDetalhes() {
           </div>
 
           {producaoDiaria.length === 0 ? (
-            <p className="text-gray-600 dark:text-neutral-400 text-center py-8">Nenhuma produção registrada</p>
+            <p className="text-gray-600 dark:text-slate-400 text-center py-8">Nenhuma produção registrada</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -632,16 +632,16 @@ export function OrdemProducaoDetalhes() {
                     <tr key={p.id} className="border-t">
                       <td className="px-4 py-3">{formatDateStr(p.data)}</td>
                       <td className="px-4 py-3">{p.turno}</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-neutral-400">
+                      <td className="px-4 py-3 text-gray-600 dark:text-slate-400">
                         {p.hora_inicio && p.hora_fim
                           ? `${p.hora_inicio} - ${p.hora_fim}`
                           : p.hora_inicio || p.hora_fim || '-'}
                       </td>
-                      <td className="px-4 py-3 text-gray-700 dark:text-neutral-300">{p.maquina_utilizada || '-'}</td>
+                      <td className="px-4 py-3 text-gray-700 dark:text-slate-300">{p.maquina_utilizada || '-'}</td>
                       <td className="px-4 py-3">
                         <p className="font-medium">{p.descricao_operacao || '-'}</p>
                         {p.observacoes && (
-                          <p className="text-sm text-gray-500 dark:text-neutral-500 mt-1">{p.observacoes}</p>
+                          <p className="text-sm text-gray-500 dark:text-slate-500 mt-1">{p.observacoes}</p>
                         )}
                       </td>
                       <td className="px-4 py-3 text-right font-bold text-red-600">{p.pecas_defeituosas || 0}</td>
@@ -661,7 +661,7 @@ export function OrdemProducaoDetalhes() {
 
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Peças Defeituosas</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Peças Defeituosas</h3>
             <Button variant="danger" onClick={() => setShowDefeitoModal(true)}>
               <AlertTriangle size={20} className="inline mr-2" />
               Registrar Defeito
@@ -669,7 +669,7 @@ export function OrdemProducaoDetalhes() {
           </div>
 
           {pecasDefeituosas.length === 0 ? (
-            <p className="text-gray-600 dark:text-neutral-400 text-center py-8">Nenhum defeito registrado</p>
+            <p className="text-gray-600 dark:text-slate-400 text-center py-8">Nenhum defeito registrado</p>
           ) : (
             <div className="space-y-3">
               {pecasDefeituosas.map((d) => (
@@ -811,7 +811,7 @@ export function OrdemProducaoDetalhes() {
         size="sm"
       >
         <form onSubmit={handleAprovar} className="space-y-4">
-          <p className="text-gray-700 dark:text-neutral-300">
+          <p className="text-gray-700 dark:text-slate-300">
             Após a aprovação, dados financeiros e de cliente não poderão ser alterados.
           </p>
           <Input

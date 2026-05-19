@@ -39,8 +39,8 @@ export function Login() {
 
       <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-neutral-100 mb-2">RJ Usinagem</h1>
-          <p className="text-gray-600 dark:text-neutral-400 text-lg">Sistema de Gestão de Produção</p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100 mb-2">RJ Usinagem</h1>
+          <p className="text-gray-600 dark:text-slate-400 text-lg">Sistema de Gestão de Produção</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

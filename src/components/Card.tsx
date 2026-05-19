@@ -15,11 +15,11 @@ export function Card({ children, className = '', padding = 'md', onClick }: Card
     lg: 'p-6',
   }
 
-  const clickableClass = onClick ? 'cursor-pointer hover:border-gray-300 dark:hover:border-neutral-700' : ''
+  const clickableClass = onClick ? 'cursor-pointer hover:border-gray-300 dark:hover:border-slate-600' : ''
 
   return (
     <div
-      className={`bg-white dark:bg-neutral-900 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-100 transition-colors ${paddingClasses[padding]} ${clickableClass} ${className}`}
+      className={`bg-white dark:bg-slate-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-slate-100 transition-colors ${paddingClasses[padding]} ${clickableClass} ${className}`}
       onClick={onClick}
     >
       {children}

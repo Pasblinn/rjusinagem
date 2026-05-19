@@ -53,7 +53,7 @@ export function UpdateProgress() {
   const canDismiss = status.state === 'error'
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[360px] bg-white dark:bg-neutral-900 rounded-xl shadow-2xl border border-gray-200 dark:border-neutral-800 overflow-hidden">
+    <div className="fixed bottom-6 right-6 z-50 w-[360px] bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-gray-200 dark:border-slate-800 overflow-hidden">
       <div className="flex items-start gap-3 p-4">
         <div className="flex-shrink-0 mt-0.5">
           {status.state === 'checking' && <RefreshCw className="animate-spin text-blue-600" size={22} />}
@@ -66,33 +66,33 @@ export function UpdateProgress() {
         <div className="flex-1 min-w-0">
           {status.state === 'checking' && (
             <>
-              <p className="font-semibold text-gray-900 dark:text-neutral-100">Verificando atualizações…</p>
-              <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1">Consultando GitHub Releases.</p>
+              <p className="font-semibold text-gray-900 dark:text-slate-100">Verificando atualizações…</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Consultando GitHub Releases.</p>
             </>
           )}
 
           {status.state === 'available' && (
             <>
-              <p className="font-semibold text-gray-900 dark:text-neutral-100">Nova versão disponível</p>
-              <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1">v{status.version} — iniciando download…</p>
+              <p className="font-semibold text-gray-900 dark:text-slate-100">Nova versão disponível</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">v{status.version} — iniciando download…</p>
             </>
           )}
 
           {status.state === 'downloading' && (
             <>
               <div className="flex items-center justify-between">
-                <p className="font-semibold text-gray-900 dark:text-neutral-100">Baixando atualização</p>
+                <p className="font-semibold text-gray-900 dark:text-slate-100">Baixando atualização</p>
                 <span className="text-sm font-bold text-blue-600">
                   {Math.round(status.percent)}%
                 </span>
               </div>
-              <div className="mt-2 w-full h-2 bg-gray-100 dark:bg-neutral-800 rounded-full overflow-hidden">
+              <div className="mt-2 w-full h-2 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-600 dark:bg-blue-500 transition-all duration-200 ease-out"
                   style={{ width: `${status.percent}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-neutral-400 mt-2">
+              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-400 mt-2">
                 <span>
                   {formatBytes(status.transferred)} / {formatBytes(status.total)}
                 </span>
@@ -103,8 +103,8 @@ export function UpdateProgress() {
 
           {status.state === 'downloaded' && (
             <>
-              <p className="font-semibold text-gray-900 dark:text-neutral-100">Atualização pronta</p>
-              <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1">
+              <p className="font-semibold text-gray-900 dark:text-slate-100">Atualização pronta</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
                 v{status.version} foi baixada. Reinicie para aplicar.
               </p>
               <div className="flex gap-2 mt-3">
@@ -116,7 +116,7 @@ export function UpdateProgress() {
                 </button>
                 <button
                   onClick={() => setDismissed(true)}
-                  className="px-3 py-2 text-sm font-medium border-2 border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 rounded-lg hover:border-gray-300 dark:hover:border-neutral-600"
+                  className="px-3 py-2 text-sm font-medium border-2 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 rounded-lg hover:border-gray-300 dark:hover:border-slate-600"
                 >
                   Depois
                 </button>
@@ -126,8 +126,8 @@ export function UpdateProgress() {
 
           {status.state === 'error' && (
             <>
-              <p className="font-semibold text-gray-900 dark:text-neutral-100">Erro ao atualizar</p>
-              <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1 break-words">{status.message}</p>
+              <p className="font-semibold text-gray-900 dark:text-slate-100">Erro ao atualizar</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 break-words">{status.message}</p>
             </>
           )}
         </div>
@@ -135,7 +135,7 @@ export function UpdateProgress() {
         {canDismiss && (
           <button
             onClick={() => setDismissed(true)}
-            className="flex-shrink-0 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300"
+            className="flex-shrink-0 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300"
             aria-label="Fechar"
           >
             <X size={18} />

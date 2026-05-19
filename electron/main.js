@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu } = require('electron')
 const path = require('path')
 const log = require('electron-log')
 const { autoUpdater } = require('electron-updater')
@@ -35,6 +35,24 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
   }
 }
+
+// Menu mínimo para habilitar atalhos Ctrl+C/V/X/Z/A e pesquisa inputs
+Menu.setApplicationMenu(
+  Menu.buildFromTemplate([
+    {
+      label: 'Editar',
+      submenu: [
+        { role: 'undo', label: 'Desfazer', accelerator: 'CmdOrCtrl+Z' },
+        { role: 'redo', label: 'Refazer', accelerator: 'CmdOrCtrl+Y' },
+        { type: 'separator' },
+        { role: 'cut', label: 'Recortar', accelerator: 'CmdOrCtrl+X' },
+        { role: 'copy', label: 'Copiar', accelerator: 'CmdOrCtrl+C' },
+        { role: 'paste', label: 'Colar', accelerator: 'CmdOrCtrl+V' },
+        { role: 'selectAll', label: 'Selecionar tudo', accelerator: 'CmdOrCtrl+A' },
+      ],
+    },
+  ])
+)
 
 // ═══════════════════════════════════════════════════════════
 // Auto Update - busca atualizações do GitHub Releases

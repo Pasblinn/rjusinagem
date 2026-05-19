@@ -19,7 +19,7 @@
   }
 
   html.dark body {
-    @apply bg-neutral-950 text-neutral-100;
+    @apply bg-slate-900 text-slate-100;
   }
 
   html.dark input[type="date"]::-webkit-calendar-picker-indicator,

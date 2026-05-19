@@ -1,41 +1,50 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react'
 
 type Theme = 'light' | 'dark'
 
 interface ThemeContextValue {
   theme: Theme
-  toggle: () => void
-  setTheme: (t: Theme) => void
+  toggleTheme: () => void
+  setTheme: (theme: Theme) => void
 }
-
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 
 const STORAGE_KEY = 'rj-theme'
 
-function getInitialTheme(): Theme {
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
+
+function readInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'light'
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved === 'light' || saved === 'dark') return saved
+    const stored = window.localStorage.getItem(STORAGE_KEY)
+    if (stored === 'light' || stored === 'dark') return stored
   } catch {}
-  return 'dark'
+  return 'light'
+}
+
+function applyThemeToDom(theme: Theme) {
+  const root = document.documentElement
+  root.classList.toggle('dark', theme === 'dark')
+  root.style.colorScheme = theme
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(getInitialTheme)
+  const [theme, setThemeState] = useState<Theme>(readInitialTheme)
 
   useEffect(() => {
-    const root = document.documentElement
-    if (theme === 'dark') root.classList.add('dark')
-    else root.classList.remove('dark')
+    applyThemeToDom(theme)
     try {
-      localStorage.setItem(STORAGE_KEY, theme)
+      window.localStorage.setItem(STORAGE_KEY, theme)
     } catch {}
   }, [theme])
 
-  const toggle = () => setThemeState((t) => (t === 'dark' ? 'light' : 'dark'))
+  const setTheme = useCallback((next: Theme) => setThemeState(next), [])
+  const toggleTheme = useCallback(
+    () => setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark')),
+    [],
+  )
 
   return (
-    <ThemeContext.Provider value={{ theme, toggle, setTheme: setThemeState }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   )
