@@ -395,13 +395,14 @@ export const api = {
   // =====================================================
 
   async getFinanceiro(opId: string): Promise<Financeiro | null> {
+    // maybeSingle: OPs sem registro financeiro retornam null em vez de 406.
     const { data, error } = await supabase
       .from('financeiro')
       .select('*')
       .eq('op_id', opId)
-      .single()
+      .maybeSingle()
 
-    if (error && error.code !== 'PGRST116') throw error
+    if (error) throw error
     return data
   },
 
@@ -476,16 +477,62 @@ export const api = {
     // Limpar documento (remover pontos, traços, barras)
     const docLimpo = documento.replace(/[^\d]/g, '')
 
-    if (docLimpo.length < 11) return null
+    if (docLimpo.length !== 11 && docLimpo.length !== 14) return null
 
     const { data, error } = await supabase
       .from('clientes')
       .select('*')
       .eq('documento', docLimpo)
+      .maybeSingle()
+
+    if (error) {
+      console.warn('Erro ao buscar cliente por documento:', error)
+      return null
+    }
+    return data
+  },
+
+  // Busca cliente pelo documento; se nao existe, cria. Sempre retorna o cliente.
+  // Usado pelo formulario de orcamento para evitar duplicacao de cadastro
+  // toda vez que o usuario digita o mesmo CNPJ.
+  async findOrCreateClientePorDocumento(input: {
+    documento: string
+    nome: string
+    telefone?: string | null
+    email?: string | null
+    userId?: string | null
+  }): Promise<Cliente | null> {
+    const docLimpo = input.documento.replace(/[^\d]/g, '')
+    if (docLimpo.length !== 11 && docLimpo.length !== 14) return null
+    if (!input.nome.trim()) return null
+
+    const existente = await this.buscarClientePorDocumento(docLimpo)
+    if (existente) return existente
+
+    const tipo_documento: 'cpf' | 'cnpj' = docLimpo.length === 11 ? 'cpf' : 'cnpj'
+    const payload: Partial<Cliente> = {
+      nome: input.nome.trim(),
+      documento: docLimpo,
+      tipo_documento,
+      telefone: input.telefone?.trim() || null,
+      email: input.email?.trim() || null,
+      ativo: true,
+      created_by: input.userId ?? null,
+    }
+
+    const { data, error } = await supabase
+      .from('clientes')
+      .insert([payload])
+      .select('*')
       .single()
 
-    if (error && error.code !== 'PGRST116') {
-      console.warn('Erro ao buscar cliente por documento:', error)
+    // Race condition: outro usuario inseriu o mesmo documento entre a busca e o insert.
+    // Recupera o cliente vencedor da unique constraint.
+    if (error?.code === '23505') {
+      return this.buscarClientePorDocumento(docLimpo)
+    }
+    if (error) {
+      console.error('Erro ao criar cliente:', error)
       return null
     }
     return data

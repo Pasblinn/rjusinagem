@@ -307,11 +307,23 @@ export function Financeiro() {
 
   async function handleSalvarContaReceberAvulsa(e: React.FormEvent) {
     e.preventDefault()
+
+    // Mesma logica do orcamento: se digitou um CNPJ/CPF valido + nome, garante
+    // que o cliente esta cadastrado em public.clientes antes de salvar a conta.
+    const docLimpo = (contaReceberForm.cnpj_cliente || '').replace(/\D/g, '')
+    if ((docLimpo.length === 11 || docLimpo.length === 14) && contaReceberForm.cliente.trim()) {
+      await api.findOrCreateClientePorDocumento({
+        documento: docLimpo,
+        nome: contaReceberForm.cliente,
+        userId: user?.id || null,
+      })
+    }
+
     try {
       if (selectedContaAvulsa) {
         await api.updateContaReceberAvulsa(selectedContaAvulsa.id, {
           cliente: contaReceberForm.cliente,
-          cnpj_cliente: contaReceberForm.cnpj_cliente || null,
+          cnpj_cliente: docLimpo || null,
           descricao: contaReceberForm.descricao,
           valor_total: parseFloat(contaReceberForm.valor_total),
           data_vencimento: contaReceberForm.data_vencimento,
@@ -322,7 +334,7 @@ export function Financeiro() {
       } else {
         await api.createContaReceberAvulsa({
           cliente: contaReceberForm.cliente,
-          cnpj_cliente: contaReceberForm.cnpj_cliente || undefined,
+          cnpj_cliente: docLimpo || undefined,
           descricao: contaReceberForm.descricao,
           valor_total: parseFloat(contaReceberForm.valor_total),
           data_vencimento: contaReceberForm.data_vencimento,
@@ -336,6 +348,17 @@ export function Financeiro() {
       loadContasReceberAvulsas()
     } catch (error: any) {
       setToast({ message: 'Erro ao salvar conta', type: 'error' })
+    }
+  }
+
+  // onBlur do CNPJ na conta avulsa: se cliente ja existe, pre-preenche o nome
+  async function autoPreencheClienteContaReceber() {
+    const docLimpo = (contaReceberForm.cnpj_cliente || '').replace(/\D/g, '')
+    if (docLimpo.length !== 11 && docLimpo.length !== 14) return
+    if (contaReceberForm.cliente.trim()) return // nao sobrescreve nome ja digitado
+    const cli = await api.buscarClientePorDocumento(docLimpo)
+    if (cli) {
+      setContaReceberForm(prev => ({ ...prev, cliente: cli.nome }))
     }
   }
 
@@ -411,25 +434,38 @@ export function Financeiro() {
 
   // Handlers - Orçamentos
 
-  // Buscar cliente pelo CNPJ
-  async function handleBuscarClientePorCnpj() {
-    if (!orcamentoForm.cnpj_cliente || orcamentoForm.cnpj_cliente.length < 11) return
+  // Numero de digitos limpos do CNPJ/CPF atualmente digitado
+  function cnpjDigitosLimpos(): number {
+    return (orcamentoForm.cnpj_cliente || '').replace(/\D/g, '').length
+  }
+
+  // Dispara busca de cliente pelo CNPJ. `silent=true` evita toasts (usado no onBlur).
+  async function handleBuscarClientePorCnpj(silent = false) {
+    const docLimpo = (orcamentoForm.cnpj_cliente || '').replace(/\D/g, '')
+    if (docLimpo.length !== 11 && docLimpo.length !== 14) {
+      if (!silent && docLimpo.length > 0) {
+        setToast({ message: 'CNPJ/CPF deve ter 11 ou 14 dígitos', type: 'error' })
+      }
+      return
+    }
 
     setBuscandoCliente(true)
     try {
-      const cliente = await api.buscarClientePorDocumento(orcamentoForm.cnpj_cliente)
+      const cliente = await api.buscarClientePorDocumento(docLimpo)
       if (cliente) {
         setClienteEncontrado(cliente)
         setOrcamentoForm(prev => ({
           ...prev,
           cliente: cliente.nome,
-          telefone_cliente: cliente.telefone || cliente.celular || '',
-          email_cliente: cliente.email || '',
+          telefone_cliente: cliente.telefone || cliente.celular || prev.telefone_cliente,
+          email_cliente: cliente.email || prev.email_cliente,
         }))
-        setToast({ message: 'Cliente encontrado!', type: 'success' })
+        if (!silent) setToast({ message: `Cliente vinculado: ${cliente.nome}`, type: 'success' })
       } else {
         setClienteEncontrado(null)
-        setToast({ message: 'Cliente não encontrado com este CNPJ/CPF', type: 'error' })
+        if (!silent) {
+          setToast({ message: 'CNPJ/CPF não cadastrado — preencha o nome e o cliente será criado ao salvar', type: 'success' })
+        }
       }
     } catch (error) {
       console.error('Erro ao buscar cliente:', error)
@@ -488,6 +524,25 @@ export function Financeiro() {
       observacoes: item.observacoes || undefined,
     }))
 
+    // Se o usuario digitou um CNPJ/CPF valido mas nao havia cliente cadastrado,
+    // cria o cliente agora (ou recupera o existente em caso de race) para
+    // que o orcamento ja nasca vinculado pelo cliente_id.
+    let clienteIdFinal = clienteEncontrado?.id || null
+    const docLimpo = (orcamentoForm.cnpj_cliente || '').replace(/\D/g, '')
+    if (!clienteIdFinal && (docLimpo.length === 11 || docLimpo.length === 14) && orcamentoForm.cliente.trim()) {
+      const cli = await api.findOrCreateClientePorDocumento({
+        documento: docLimpo,
+        nome: orcamentoForm.cliente,
+        telefone: orcamentoForm.telefone_cliente,
+        email: orcamentoForm.email_cliente,
+        userId: user?.id || null,
+      })
+      if (cli) {
+        clienteIdFinal = cli.id
+        setClienteEncontrado(cli)
+      }
+    }
+
     try {
       if (selectedOrcamento) {
         // Editar orçamento existente
@@ -495,10 +550,10 @@ export function Financeiro() {
           selectedOrcamento.id,
           {
             cliente: orcamentoForm.cliente,
-            cnpj_cliente: orcamentoForm.cnpj_cliente || null,
+            cnpj_cliente: docLimpo || null,
             telefone_cliente: orcamentoForm.telefone_cliente || null,
             email_cliente: orcamentoForm.email_cliente || null,
-            cliente_id: clienteEncontrado?.id || null,
+            cliente_id: clienteIdFinal,
             observacoes: orcamentoForm.observacoes || null,
             updated_by: user?.id || null,
           } as any,
@@ -510,10 +565,10 @@ export function Financeiro() {
         await api.createOrcamentoComItens(
           {
             cliente: orcamentoForm.cliente,
-            cnpj_cliente: orcamentoForm.cnpj_cliente || null,
+            cnpj_cliente: docLimpo || null,
             telefone_cliente: orcamentoForm.telefone_cliente || null,
             email_cliente: orcamentoForm.email_cliente || null,
-            cliente_id: clienteEncontrado?.id || null,
+            cliente_id: clienteIdFinal,
             observacoes: orcamentoForm.observacoes || null,
             created_by: user?.id || '',
           } as any,
@@ -540,7 +595,17 @@ export function Financeiro() {
       email_cliente: (orcamento as any).email_cliente || '',
       observacoes: orcamento.observacoes || '',
     })
-    setClienteEncontrado(null)
+
+    // Re-hidrata o vinculo com o cliente para nao perder cliente_id ao salvar.
+    // Prioriza cliente_id se existir; senao cai pra busca por documento.
+    let cli: Cliente | null = null
+    if ((orcamento as any).cliente_id) {
+      cli = await api.getCliente((orcamento as any).cliente_id)
+    }
+    if (!cli && (orcamento as any).cnpj_cliente) {
+      cli = await api.buscarClientePorDocumento((orcamento as any).cnpj_cliente)
+    }
+    setClienteEncontrado(cli)
 
     // Carregar itens do orçamento
     try {
@@ -1123,6 +1188,7 @@ export function Financeiro() {
             label="CNPJ/CPF do Cliente"
             value={contaReceberForm.cnpj_cliente}
             onChange={(e) => setContaReceberForm({ ...contaReceberForm, cnpj_cliente: e.target.value })}
+            onBlur={autoPreencheClienteContaReceber}
             placeholder="00.000.000/0000-00"
           />
           <Input
@@ -1222,13 +1288,18 @@ export function Financeiro() {
               Dados do Cliente
             </h3>
 
-            {/* CNPJ com busca */}
+            {/* CNPJ com busca automatica (onBlur) */}
             <div className="flex gap-2">
               <div className="flex-1">
                 <Input
                   label="CNPJ/CPF do Cliente"
                   value={orcamentoForm.cnpj_cliente}
-                  onChange={(e) => setOrcamentoForm({ ...orcamentoForm, cnpj_cliente: e.target.value })}
+                  onChange={(e) => {
+                    setOrcamentoForm({ ...orcamentoForm, cnpj_cliente: e.target.value })
+                    // Limpa o vinculo se o usuario comecou a alterar o doc
+                    if (clienteEncontrado) setClienteEncontrado(null)
+                  }}
+                  onBlur={() => handleBuscarClientePorCnpj(true)}
                   placeholder="00.000.000/0000-00 ou 000.000.000-00"
                 />
               </div>
@@ -1236,8 +1307,9 @@ export function Financeiro() {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={handleBuscarClientePorCnpj}
+                  onClick={() => handleBuscarClientePorCnpj(false)}
                   disabled={buscandoCliente || !orcamentoForm.cnpj_cliente}
+                  title="Buscar cliente"
                 >
                   {buscandoCliente ? (
                     <RefreshCw size={18} className="animate-spin" />
@@ -1248,11 +1320,17 @@ export function Financeiro() {
               </div>
             </div>
 
-            {clienteEncontrado && (
-              <div className="text-sm text-green-600 bg-green-50 p-2 rounded">
-                Cliente encontrado: {clienteEncontrado.nome}
+            {clienteEncontrado ? (
+              <div className="text-sm text-green-700 dark:text-emerald-300 bg-green-50 dark:bg-emerald-900/30 border border-green-200 dark:border-emerald-800 p-2 rounded flex items-center gap-2">
+                <span aria-hidden>✓</span>
+                <span>Cliente vinculado: <strong>{clienteEncontrado.nome}</strong></span>
               </div>
-            )}
+            ) : (cnpjDigitosLimpos() === 11 || cnpjDigitosLimpos() === 14) && orcamentoForm.cliente.trim() ? (
+              <div className="text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 p-2 rounded flex items-center gap-2">
+                <span aria-hidden>+</span>
+                <span>Novo cliente — será cadastrado automaticamente ao salvar</span>
+              </div>
+            ) : null}
 
             <Input
               label="Nome do Cliente"
