@@ -5,6 +5,16 @@ const { autoUpdater } = require('electron-updater')
 
 const isDev = process.env.NODE_ENV === 'development'
 
+// Tela branca ao abrir em alguns PCs Windows (GPU integrada / drivers de video
+// antigos) e um bug classico do Electron: a aceleracao de hardware falha e o
+// Chromium renderiza uma tela em branco. Desabilitar a aceleracao forca a
+// renderizacao por software, que e universalmente compativel. Em um app de
+// gestao (sem 3D/video pesado) o impacto de performance e irrelevante.
+if (!isDev) {
+  app.disableHardwareAcceleration()
+  app.commandLine.appendSwitch('disable-gpu')
+}
+
 // Configurar logs do auto-updater
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
