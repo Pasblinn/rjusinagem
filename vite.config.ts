@@ -1,9 +1,21 @@
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
+// Remove o atributo crossorigin dos <script>/<link> gerados.
+// Em Electron carregando via file://, modulos com crossorigin tem origin
+// "null" e o fetch CORS pode falhar — removendo evita esse risco.
+function stripCrossorigin(): Plugin {
+  return {
+    name: 'strip-crossorigin',
+    transformIndexHtml(html) {
+      return html.replace(/\s+crossorigin/g, '')
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), stripCrossorigin()],
   base: './',
   resolve: {
     alias: {

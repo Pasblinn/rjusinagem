@@ -25,7 +25,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     },
     autoHideMenuBar: true,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#fafafa'
   })
 
   if (isDev) {
