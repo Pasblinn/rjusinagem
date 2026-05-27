@@ -36,3 +36,6 @@ coverage/
 
 # Claude Code session data
 .claude/
+
+# Playwright MCP artifacts
+.playwright-mcp/
