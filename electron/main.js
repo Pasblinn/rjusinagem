@@ -38,11 +38,29 @@ function createWindow() {
     backgroundColor: '#fafafa'
   })
 
+  // Diagnostico de falhas do renderer. Sem isto, uma tela branca nao deixa
+  // nenhum rastro nos logs — foi o que cegou as tentativas anteriores. Tudo vai
+  // para o electron-log (userData/logs), acessivel no proprio PC do cliente.
+  mainWindow.webContents.on('did-fail-load', (_e, code, desc, url) => {
+    log.error('Renderer did-fail-load:', code, desc, url)
+  })
+  mainWindow.webContents.on('render-process-gone', (_e, details) => {
+    log.error('Renderer process gone:', details)
+  })
+  mainWindow.webContents.on('preload-error', (_e, file, error) => {
+    log.error('Preload error:', file, error)
+  })
+  mainWindow.webContents.on('console-message', (_e, level, message, line, sourceId) => {
+    log.info(`Renderer console [${level}] ${message} (${sourceId}:${line})`)
+  })
+
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173')
     mainWindow.webContents.openDevTools()
   } else {
-    mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
+    mainWindow
+      .loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
+      .catch((err) => log.error('Falha ao carregar index.html:', err))
   }
 }
 
