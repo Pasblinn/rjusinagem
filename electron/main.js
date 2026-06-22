@@ -54,6 +54,23 @@ function createWindow() {
     log.info(`Renderer console [${level}] ${message} (${sourceId}:${line})`)
   })
 
+  // Copiar/colar/recortar/desfazer via teclado de forma robusta. Em alguns
+  // Windows o acelerador do menu (auto-oculto) nao dispara e o Ctrl+C/V para
+  // de funcionar — o Chromium do Electron nao liga esses atalhos sozinho no
+  // Windows. Tratando direto no webContents, independe de menu e plataforma.
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.type !== 'keyDown' || !(input.control || input.meta)) return
+    const wc = mainWindow.webContents
+    switch ((input.key || '').toLowerCase()) {
+      case 'c': wc.copy(); event.preventDefault(); break
+      case 'v': wc.paste(); event.preventDefault(); break
+      case 'x': wc.cut(); event.preventDefault(); break
+      case 'a': wc.selectAll(); event.preventDefault(); break
+      case 'z': input.shift ? wc.redo() : wc.undo(); event.preventDefault(); break
+      case 'y': wc.redo(); event.preventDefault(); break
+    }
+  })
+
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173')
     mainWindow.webContents.openDevTools()
@@ -64,19 +81,22 @@ function createWindow() {
   }
 }
 
-// Menu mínimo para habilitar atalhos Ctrl+C/V/X/Z/A e pesquisa inputs
+// Menu "Editar" visivel/clicavel. registerAccelerator:false: os atalhos sao
+// apenas EXIBIDOS aqui — quem os trata e o before-input-event (em createWindow),
+// que e confiavel no Windows. Assim o menu nao registra aceleradores que, em
+// maquinas onde funcionam, causariam acao duplicada (ex.: colar duas vezes).
 Menu.setApplicationMenu(
   Menu.buildFromTemplate([
     {
       label: 'Editar',
       submenu: [
-        { role: 'undo', label: 'Desfazer', accelerator: 'CmdOrCtrl+Z' },
-        { role: 'redo', label: 'Refazer', accelerator: 'CmdOrCtrl+Y' },
+        { role: 'undo', label: 'Desfazer', accelerator: 'CmdOrCtrl+Z', registerAccelerator: false },
+        { role: 'redo', label: 'Refazer', accelerator: 'CmdOrCtrl+Y', registerAccelerator: false },
         { type: 'separator' },
-        { role: 'cut', label: 'Recortar', accelerator: 'CmdOrCtrl+X' },
-        { role: 'copy', label: 'Copiar', accelerator: 'CmdOrCtrl+C' },
-        { role: 'paste', label: 'Colar', accelerator: 'CmdOrCtrl+V' },
-        { role: 'selectAll', label: 'Selecionar tudo', accelerator: 'CmdOrCtrl+A' },
+        { role: 'cut', label: 'Recortar', accelerator: 'CmdOrCtrl+X', registerAccelerator: false },
+        { role: 'copy', label: 'Copiar', accelerator: 'CmdOrCtrl+C', registerAccelerator: false },
+        { role: 'paste', label: 'Colar', accelerator: 'CmdOrCtrl+V', registerAccelerator: false },
+        { role: 'selectAll', label: 'Selecionar tudo', accelerator: 'CmdOrCtrl+A', registerAccelerator: false },
       ],
     },
   ])
