@@ -1657,7 +1657,11 @@ export const api = {
       .select('*')
       .gte('data', filtros.dataInicio)
       .lte('data', filtros.dataFim)
-      .eq('status', 'fechado') // Só conta registros fechados
+      // Conta fechados E ajustados. Editar/corrigir os horários de um ponto o
+      // marca como 'ajustado', e ajustes manuais (+/-) também são 'ajustado'.
+      // Filtrar só 'fechado' descartava horas reais corrigidas — por isso o
+      // total do mês não somava. 'aberto' fica de fora (não tem duração).
+      .in('status', ['fechado', 'ajustado'])
       .order('funcionario_nome')
       .order('data', { ascending: true })
 
@@ -1823,7 +1827,8 @@ export const api = {
       .select('total_minutos, data')
       .gte('data', filtros.dataInicio)
       .lte('data', filtros.dataFim)
-      .eq('status', 'fechado')
+      // Inclui ajustados (pontos editados/corrigidos e ajustes manuais), não só fechados.
+      .in('status', ['fechado', 'ajustado'])
 
     if (filtros.funcionarioId) {
       query = query.eq('funcionario_id', filtros.funcionarioId)
@@ -2246,7 +2251,8 @@ export const api = {
       .from('registro_ponto')
       .select('total_minutos')
       .eq('funcionario_id', funcionario_id)
-      .eq('status', 'fechado')
+      // Inclui ajustados: horas corrigidas/ajustadas também contam no pagamento.
+      .in('status', ['fechado', 'ajustado'])
       .gte('data', desde)
 
     if (error) throw error
